@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
+import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_helper.dart';
+import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart';
 import 'package:today/utils/jump_route_utils.dart';
@@ -139,20 +142,24 @@ class _ContentState extends State<_ContentWidget> {
         ),
 
         //底部显示创建月度计划或者添加账单的按钮
-        Container(
-          constraints: BoxConstraints.expand(height: 50.0),
-          alignment: Alignment.center,
-          color: Colors.blueAccent,
-          child: GestureDetector(
+        GestureDetector(
+          onTap:
+              //点击跳转到创建计划页面
+              _thisMonthPlanBean != null ? _addBillRecord : _toAddPlanRoute,
+          child: Container(
+            margin: EdgeInsets.all(15.0),
+            constraints: BoxConstraints.expand(height: 50.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            ),
             child: Text(
               _thisMonthPlanBean != null
                   ? StringConstant.ADD_BILL_RECORD
                   : StringConstant.NO_BILL_PLAN_REMIND,
               style: TextStyle(color: Colors.white, fontSize: 14.0),
             ),
-            onTap:
-                //点击跳转到创建计划页面
-                _thisMonthPlanBean != null ? _addBillRecord : _toAddPlanRoute,
           ),
         ),
       ],
@@ -185,7 +192,30 @@ class _ContentState extends State<_ContentWidget> {
 
   //添加一条消费记录
   void _addBillRecord() async {
-    debugPrint("添加消费记录");
+    BillBean bean = BillBean();
+    bean.time = DateTime.now().millisecond;
+    bean.isPay = _isPay;
+    bean.billTypeBean = _chooseBillTypeBean;
+    bean.billPlanBean = this._thisMonthPlanBean;
+    bean.address = _addressInputController.text;
+    bean.remark = _remarkInputController.text;
+    bean.amount = double.parse(_amountInputController.text, (error) {
+      //如果数据转换出错，则设置输入框为空
+      _amountInputController.text = "";
+      //将之前设置的地址和备注信息重新设置上去
+      _addressInputController.text = bean.address;
+      _remarkInputController.text = bean.remark;
+      return -1;
+    });
+
+    //添加数据
+    DBResultEntity entity = await _dbHelper.insertABill(bean);
+    if (entity.code != DBConstant.DB_RESULT_SUCCESS) {
+      showInfo(context, entity.msg);
+    } else {
+      //携带当前数据返回到上个页面
+      Navigator.pop(context, bean);
+    }
   }
 
   //修改是否是支出信息
@@ -213,7 +243,7 @@ class _TimeWidget extends StatelessWidget {
   _TimeWidget(this._titleStyle, this._contentStyle);
 
   //现在的时间
-  final String _current = DateUtils.getCurrentTime();
+  final String _current = DateUtils.getCurrentTimeWithMinutes();
 
   @override
   Widget build(BuildContext context) {

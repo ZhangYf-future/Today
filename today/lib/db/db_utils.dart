@@ -118,4 +118,9 @@ class DBUtils {
     return await database.query(DBConstant.BILL_TYPE_TABLE_NAME,
         where: "${DBConstant.BILL_TYPE_ID} = ?", whereArgs: whereArgs);
   }
+
+  //向账单表中添加一条数据
+  Future<int> insertABill(Map<String, dynamic> map) async {
+    return await database.insert(DBConstant.BILL_TABLE_NAME, map);
+  }
 }

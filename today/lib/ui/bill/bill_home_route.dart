@@ -4,7 +4,6 @@ import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
 
 ///账单首页
-
 class BillHomeRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -46,9 +45,34 @@ class _ContentWidget extends StatefulWidget {
 class _ContentState extends State<_ContentWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints.expand(),
-      child: Text("账单列表"),
+    return Column(
+      children: [
+        //顶部显示统计信息
+        _StatisticsWidget(),
+        //下面是一个ListView显示当月账单列表
+      ],
+    );
+  }
+}
+
+//统计账单信息的部分
+class _StatisticsWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.deepOrange,
+      elevation: 10.0,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      margin: EdgeInsets.all(15.0),
+      child: Container(
+        child: Row(
+          children: [
+            Expanded(child: Text("本月消费")),
+            Expanded(child: Text("本月计划消费")),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,7 @@
+import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
+import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_utils.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart';
@@ -86,6 +88,42 @@ class DBHelper {
     for (Map<String, dynamic> map in dbDataList) {
       result.add(BillTypeBean.fromMap(map));
     }
+    return result;
+  }
+
+  //向账单表中添加一条数据
+  Future<DBResultEntity> insertABill(BillBean bean) async {
+    DBResultEntity result = DBResultEntity();
+    //默认操作出错
+    result.code = DBConstant.DB_RESULT_FAILED;
+    //判断金额信息是否正确
+    if (bean.amount < 0) {
+      result.msg = StringConstant.ERROR_BILL_AMOUNT;
+      return result;
+    }
+
+    //判断时间信息是否正确
+    if (bean.time < 0) {
+      result.msg = StringConstant.ERROR_BILL_TIME;
+      return result;
+    }
+
+    //判断计划信息是否设置
+    if (bean.billPlanBean == null) {
+      result.msg = StringConstant.ERROR_BILL_PLAN;
+      return result;
+    }
+
+    //检查类型信息是否选择
+    if (bean.billTypeBean == null) {
+      result.msg = StringConstant.ERROR_BILL_TYPE;
+      return result;
+    }
+
+    //设置信息正确
+    result.code = DBConstant.DB_RESULT_SUCCESS;
+    result.msg = StringConstant.OPERATE_SUCCESS;
+    result.result = await _dbUtils.insertABill(bean.toDBMap());
     return result;
   }
 }

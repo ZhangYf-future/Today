@@ -105,10 +105,28 @@ class StringConstant {
   static const String EDIT = "编辑";
   //说明
   static const String DESCRIPTION = "说明";
+
+  //操作成功
+  static const String OPERATE_SUCCESS = "操作成功";
+
+  //账单时间信息出错
+  static const String ERROR_BILL_TIME = "请检查账单时间信息是否正确";
+  //金额是否正确
+  static const String ERROR_BILL_AMOUNT = "请输入正确的账单金额";
+  //计划信息出错
+  static const String ERROR_BILL_PLAN = "请检查计划信息是否设置";
+  //账单类型出错
+  static const String ERROR_BILL_TYPE = "请检查账单类型是否选择";
 }
 
 ///数据库部分常量
 class DBConstant {
+  //默认的数据库操作结果
+  //数据库操作成功
+  static const int DB_RESULT_SUCCESS = 0;
+  //数据库操作失败
+  static const int DB_RESULT_FAILED = -1;
+
   //数据库名称
   static const String DB_NAME = "toDayManage.db";
   //数据库版本号
