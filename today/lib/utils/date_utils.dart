@@ -28,4 +28,10 @@ class DateUtils {
   static int getCurrentMonth() {
     return DateTime.now().month;
   }
+
+  //将指定时间长度的时间转换为想要的格式
+  static String getTimeFormat(int timeMillions, String format) {
+    var time = DateTime.fromMillisecondsSinceEpoch(timeMillions);
+    return DateFormat(format).format(time);
+  }
 }

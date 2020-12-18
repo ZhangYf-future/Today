@@ -123,4 +123,9 @@ class DBUtils {
   Future<int> insertABill(Map<String, dynamic> map) async {
     return await database.insert(DBConstant.BILL_TABLE_NAME, map);
   }
+
+  //获取账单表中的全部数据
+  Future<List<Map<String, dynamic>>> getAllBill() async {
+    return await database.query(DBConstant.BILL_TABLE_NAME);
+  }
 }

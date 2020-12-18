@@ -126,4 +126,10 @@ class DBHelper {
     result.result = await _dbUtils.insertABill(bean.toDBMap());
     return result;
   }
+  
+
+  //获取全部账单数据
+  Future<List<BillBean>> getAllBillBean(){
+    
+  }
 }

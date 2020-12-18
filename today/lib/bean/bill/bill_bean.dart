@@ -1,6 +1,7 @@
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/utils/constant.dart';
+import 'package:today/utils/date_utils.dart';
 
 /// 账单管理数据类
 
@@ -14,6 +15,24 @@ class BillBean {
   bool isPay; //是否是支出
   BillTypeBean billTypeBean; //类型信息
   BillPlanBean billPlanBean; //计划信息
+
+  //构造函数
+  BillBean();
+
+  //从数据库中的map信息中构建类
+  BillBean.fromDBMap(Map<String, dynamic> billMap,
+      Map<String, dynamic> billTypeMap, Map<String, dynamic> billPlanMap) {
+    this.id = billMap[DBConstant.BILL_ID];
+    this.amount = billMap[DBConstant.BILL_AMOUNT];
+    this.time = billMap[DBConstant.BILL_TIME];
+    this.timeFormat =
+        DateUtils.getTimeFormat(time, DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
+    this.address = billMap[DBConstant.BILL_ADDRESS];
+    this.remark = billMap[DBConstant.BILL_REMARK];
+    this.isPay = billMap[DBConstant.BILL_IS_PAY];
+    this.billTypeBean = BillTypeBean.fromMap(billTypeMap);
+    this.billPlanBean = BillPlanBean.fromMap(billPlanMap);
+  }
 
   //将当前的数据转换为map信息
   Map<String, dynamic> toDBMap() {
