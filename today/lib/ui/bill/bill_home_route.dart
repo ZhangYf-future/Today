@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_bean.dart';
+import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
 
@@ -44,8 +45,17 @@ class _ContentWidget extends StatefulWidget {
 }
 
 class _ContentState extends State<_ContentWidget> {
+  //数据库帮助类
+  DBHelper _helper = DBHelper();
+
   //本地数据库中保存的账单列表信息
   final List<BillBean> _billBeanList = List();
+
+  @override
+  void initState() {
+    super.initState();
+    getAllBill();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +66,25 @@ class _ContentState extends State<_ContentWidget> {
         //下面是一个ListView显示当月账单列表
         Expanded(
             child: ListView.builder(
+                itemCount: _billBeanList.length,
                 itemBuilder: (context, index) => _BillItemWidget(
                     _billBeanList[index], index == _billBeanList.length - 1))),
       ],
     );
+  }
+
+  //获取全部的账单信息
+  void getAllBill() async {
+    _billBeanList.clear();
+    _billBeanList.addAll(await _helper.getAllBillBean());
+    _updatePage();
+  }
+
+  //更新页面
+  void _updatePage() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 }
 
@@ -105,6 +130,7 @@ class _BillItemWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             //第一行
             Row(
@@ -119,6 +145,33 @@ class _BillItemWidget extends StatelessWidget {
                   ),
                 )
               ],
+            ),
+
+            //中间显示消费了多少钱
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                '${_billBean.isPay ? "-" : "+"}${_billBean.amount}',
+                style: TextStyle(
+                  color:
+                      _billBean.isPay ? Colors.redAccent : Colors.greenAccent,
+                  fontSize: 20.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+            //底部右边显示计划信息
+            Container(
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              alignment: Alignment.centerRight,
+              child: Text(
+                "计划:  ${_billBean.billPlanBean.planYear} - ${_billBean.billPlanBean.planMonth}",
+                style: TextStyle(
+                  color: Colors.indigoAccent,
+                  fontSize: 14.0,
+                ),
+              ),
             ),
           ],
         ),

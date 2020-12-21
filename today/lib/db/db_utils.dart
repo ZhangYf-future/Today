@@ -64,6 +64,18 @@ class DBUtils {
     return await database.query(DBConstant.BILL_PLAN_TABLE_NAME);
   }
 
+  //根据账单计划id获取账单计划表中的一条数据
+  Future<Map<String, dynamic>> getBillPlanWithId(String id) async {
+    var values = List();
+    values.add(id);
+    var result = await database.query(DBConstant.BILL_PLAN_TABLE_NAME,
+        where: "${DBConstant.BILL_PLAN_ID} = ?", whereArgs: values);
+
+    if (result.length == 1) return result[0];
+
+    return null;
+  }
+
   //根据账单计划年度和月度获取当前计划信息
   Future<List<Map<String, dynamic>>> getBillPlanWithDate(
       int year, int month) async {
@@ -112,11 +124,13 @@ class DBUtils {
   }
 
   //根据id获取账单类型表中的一条数据
-  Future<List<Map<String, dynamic>>> getABillType(String id) async {
+  Future<Map<String, dynamic>> getABillType(String id) async {
     List whereArgs = List();
     whereArgs.add(id);
-    return await database.query(DBConstant.BILL_TYPE_TABLE_NAME,
+    var result = await database.query(DBConstant.BILL_TYPE_TABLE_NAME,
         where: "${DBConstant.BILL_TYPE_ID} = ?", whereArgs: whereArgs);
+    if (result.length == 1) return result[0];
+    return null;
   }
 
   //向账单表中添加一条数据

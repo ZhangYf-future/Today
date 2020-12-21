@@ -21,6 +21,14 @@ class DBHelper {
     return billPlanList;
   }
 
+  //根据id获取一条账单计划信息
+  Future<BillPlanBean> getBillPlanWithId(String id) async {
+    var result = await _dbUtils.getBillPlanWithId(id);
+
+    if (result != null) return BillPlanBean.fromMap(result);
+    return null;
+  }
+
   //判断当前月份是否存在计划
   Future<bool> checkCurrentMonthPlan() async {
     var list = await getAllBillPlan();
@@ -91,6 +99,13 @@ class DBHelper {
     return result;
   }
 
+  //根据账单类型id获取账单类型数据
+  Future<BillTypeBean> getBillTypeBeanWithId(String id) async {
+    var result = await _dbUtils.getABillType(id);
+    if (result != null) return BillTypeBean.fromMap(result);
+    return null;
+  }
+
   //向账单表中添加一条数据
   Future<DBResultEntity> insertABill(BillBean bean) async {
     DBResultEntity result = DBResultEntity();
@@ -126,10 +141,27 @@ class DBHelper {
     result.result = await _dbUtils.insertABill(bean.toDBMap());
     return result;
   }
-  
 
   //获取全部账单数据
-  Future<List<BillBean>> getAllBillBean(){
-    
+  Future<List<BillBean>> getAllBillBean() async {
+    //保存结果的列表
+    List<BillBean> result = List();
+    //获取账单表中的全部数据
+    var billDBValueList = await _dbUtils.getAllBill();
+
+    for (Map<String, dynamic> item in billDBValueList) {
+      //获取当前的typeId
+      String typeId = item[DBConstant.BILL_TYPE_WITH_ID].toString();
+      //根据typeid获取type信息
+      BillTypeBean typeBean = await getBillTypeBeanWithId(typeId);
+      //获取当前的planid
+      String planId = item[DBConstant.BILL_PLAN_WITH_ID].toString();
+      //根据planid获取plan信息
+      BillPlanBean planBean = await getBillPlanWithId(planId);
+      //创建账单信息
+      BillBean billBean = BillBean.fromDBMap(item, typeBean, planBean);
+      result.add(billBean);
+    }
+    return result;
   }
 }
