@@ -193,7 +193,7 @@ class _ContentState extends State<_ContentWidget> {
   //添加一条消费记录
   void _addBillRecord() async {
     BillBean bean = BillBean();
-    bean.time = DateTime.now().millisecond;
+    bean.time = DateTime.now().millisecondsSinceEpoch;
     bean.isPay = _isPay;
     bean.billTypeBean = _chooseBillTypeBean;
     bean.billPlanBean = this._thisMonthPlanBean;

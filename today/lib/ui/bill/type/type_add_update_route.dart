@@ -186,6 +186,7 @@ class _ContentWidget extends StatelessWidget {
               height: 50.0,
               margin: EdgeInsets.only(bottom: 30.0, left: 10.0, right: 10.0),
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => _confirm(context),
                 child: Center(
                   child: Text(
