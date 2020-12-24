@@ -213,4 +213,9 @@ class DBConstant {
         $BILL_PLAN_CREATE_TIME TEXT NOT NULL
       );
     """;
+
+  //获取账单表中的最后10条数据
+  static const String GET_BILL_LAST_TEN_ROW = """
+    SELECT * FROM $BILL_TABLE_NAME ORDER BY $BILL_TIME DESC LIMIT 10;
+  """;
 }

@@ -194,6 +194,8 @@ class _ContentState extends State<_ContentWidget> {
   void _addBillRecord() async {
     BillBean bean = BillBean();
     bean.time = DateTime.now().millisecondsSinceEpoch;
+    bean.timeFormat =
+        DateUtils.getTimeFormat(bean.time, DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
     bean.isPay = _isPay;
     bean.billTypeBean = _chooseBillTypeBean;
     bean.billPlanBean = this._thisMonthPlanBean;

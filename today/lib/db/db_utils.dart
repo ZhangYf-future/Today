@@ -142,4 +142,22 @@ class DBUtils {
   Future<List<Map<String, dynamic>>> getAllBill() async {
     return await database.query(DBConstant.BILL_TABLE_NAME);
   }
+
+  //获取账单表中最后插入的10条数据
+  Future<List<Map<String, dynamic>>> getBillLastTen() async {
+    return await database.rawQuery(DBConstant.GET_BILL_LAST_TEN_ROW);
+  }
+
+  //根据计划id获取和当前计划id相关的金额
+  Future<List<Map<String, dynamic>>> getBillAmountWithPlanId(int planId) async {
+    var arguments = List();
+    arguments.add(planId);
+    //这里只需要获取金额数据
+    var columnNameList = List<String>();
+    columnNameList.add(DBConstant.BILL_AMOUNT);
+    return await database.query(DBConstant.BILL_TABLE_NAME,
+        columns: columnNameList,
+        where: "${DBConstant.BILL_PLAN_WITH_ID} = ? ",
+        whereArgs: arguments);
+  }
 }

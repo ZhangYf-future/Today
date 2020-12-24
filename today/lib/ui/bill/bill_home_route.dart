@@ -22,27 +22,6 @@ class BillHomeRoute extends StatelessWidget {
         ),
       ),
       body: _ContentWidget(),
-      floatingActionButton: GestureDetector(
-        child: Card(
-          color: Colors.blueAccent,
-          shadowColor: Colors.grey,
-          elevation: 5.0,
-          shape: CircleBorder(),
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Icon(
-              Icons.add,
-              size: 40.0,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        onTap: () => {
-          //跳转到添加账单的页面
-          JumpUtils.toNextRouteWithNameGetResult(
-              context, RouteNameConstant.BILL_ADD_ROUTE)
-        },
-      ),
     );
   }
 }
@@ -58,6 +37,9 @@ class _ContentWidget extends StatefulWidget {
 class _ContentState extends State<_ContentWidget> {
   //数据库帮助类
   DBHelper _helper = DBHelper();
+
+  //当前月份的月度计划信息
+  BillPlanBean _monthPlanBean;
 
   //本月消费金额
   double _consumeAmount = -1;
@@ -76,58 +58,119 @@ class _ContentState extends State<_ContentWidget> {
   @override
   void initState() {
     super.initState();
+    //获取当前月份的账单计划信息
+    _getMonthPlanInfo();
     _getAllBill();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        //顶部显示统计信息
-        _StatisticsWidget(
-          _consumeAmount >= 0 ? _consumeAmount.toString() : "",
-          _consumePlan >= 0 ? _consumePlan.toString() : "",
-          _consumeSurplus >= 0 ? _consumeSurplus.toString() : "",
+        Column(
+          children: [
+            //顶部显示统计信息
+            _StatisticsWidget(
+              _consumeAmount >= 0 ? _consumeAmount.toString() : "",
+              _consumePlan >= 0 ? _consumePlan.toString() : "",
+              _consumeSurplus >= 0 ? _consumeSurplus.toString() : "",
+            ),
+            //下面是一个ListView显示当月账单列表
+            Expanded(
+                child: ListView.builder(
+                    itemCount: _billBeanList.length,
+                    itemBuilder: (context, index) => _BillItemWidget(
+                        _billBeanList[index],
+                        index == _billBeanList.length - 1))),
+          ],
         ),
-        //下面是一个ListView显示当月账单列表
-        Expanded(
-            child: ListView.builder(
-                itemCount: _billBeanList.length,
-                itemBuilder: (context, index) => _BillItemWidget(
-                    _billBeanList[index], index == _billBeanList.length - 1))),
+        Positioned(
+          right: 10,
+          bottom: 10,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Card(
+              color: Colors.blueAccent,
+              shadowColor: Colors.grey,
+              elevation: 10.0,
+              shape: CircleBorder(),
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Icon(
+                  Icons.add,
+                  size: 40.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            onTap: () async {
+              //跳转到添加账单的页面
+              var result = await JumpUtils.toNextRouteWithNameGetResult(
+                  context, RouteNameConstant.BILL_ADD_ROUTE);
+              _updateDataWhenAddBillBack(result);
+            },
+          ),
+        ),
       ],
     );
   }
 
   //获取当前月份的账单计划信息
   void _getMonthPlanInfo() async {
-    BillPlanBean planBean = await _helper.getCurrentMonthPlan();
-    if (planBean != null) {
-      this._consumePlan = planBean.planAmount;
+    _monthPlanBean = await _helper.getCurrentMonthPlan();
+    if (_monthPlanBean != null) {
+      //计划消费金额
+      this._consumePlan = _monthPlanBean.planAmount;
+      //获取当前消费计划下的账单金额信息
+      var amountList =
+          await _helper.getAllBillAmountWithPlanId(_monthPlanBean.id);
+      if (amountList != null && amountList.isNotEmpty) {
+        double totalAmount = 0;
+        amountList.forEach((element) {
+          totalAmount += element;
+        });
+        this._consumeAmount = totalAmount;
+      }
+      //用计划金额减去已经消费的金额即为可用金额
+      this._consumeSurplus = _monthPlanBean.planAmount - this._consumeAmount;
     }
+    //更新页面
+    _updatePage();
   }
 
   //获取全部的账单信息
   void _getAllBill() async {
-    //首先获取当前月份的账单计划信息
-    _getMonthPlanInfo();
     //清空列表中的数据
     _billBeanList.clear();
-    //获取到全部的账单信息
-    var list = await _helper.getAllBillBean();
-    _billBeanList.addAll(list.reversed);
-    //遍历列表，获取已经消费的数据
-    double total = 0;
-    for (BillBean item in _billBeanList) {
-      if (item.isPay) {
-        total += item.amount;
+    //获取账单列表的最近十条数据
+    var list = await _helper.getBillLastTenRows();
+    _billBeanList.addAll(list);
+    _updatePage();
+  }
+
+  //添加账单页面返回数据后更新当前页面的数据
+  void _updateDataWhenAddBillBack(dynamic result) {
+    if (result != null && result is BillBean) {
+      //将当前的数据加入到列表中
+      this._billBeanList.insert(0, result);
+      if (this._billBeanList.length > 10) {
+        this._billBeanList.removeRange(10, this._billBeanList.length);
+      }
+
+      //如果添加的数据在当前的月度计划中，则更新月度计划数据
+      if (this._monthPlanBean != null &&
+          result.billPlanBean.id == this._monthPlanBean.id &&
+          result.isPay) {
+        //添加本月消费金额
+        this._consumeAmount = this._consumeAmount >= 0
+            ? this._consumeAmount + result.amount
+            : result.amount;
+        //计算本月剩余可用金额
+        this._consumeSurplus =
+            this._monthPlanBean.planAmount - this._consumeAmount;
       }
     }
-
-    this._consumeAmount = total;
-    if (this._consumePlan >= 0 && this._consumeAmount >= 0) {
-      this._consumeSurplus = this._consumePlan - this._consumeAmount;
-    }
+    //更新页面
     _updatePage();
   }
 

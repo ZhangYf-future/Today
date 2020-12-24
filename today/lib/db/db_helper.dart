@@ -164,4 +164,33 @@ class DBHelper {
     }
     return result;
   }
+
+  //根据计划id获取账单表中和这个id相关的所有记录的金额
+  Future<List<double>> getAllBillAmountWithPlanId(int planId) async {
+    var result = await _dbUtils.getBillAmountWithPlanId(planId);
+    var amountList = List<double>();
+    for (Map<String, dynamic> map in result) {
+      amountList.add(map[DBConstant.BILL_AMOUNT]);
+    }
+    return amountList;
+  }
+
+  //获取账单数据表中的最近10条数据
+  Future<List<BillBean>> getBillLastTenRows() async {
+    var list = await _dbUtils.getBillLastTen();
+    var result = List<BillBean>();
+    for (Map<String, dynamic> map in list) {
+      //获取计划id
+      var planId = map[DBConstant.BILL_PLAN_WITH_ID];
+      var planMap = await _dbUtils.getBillPlanWithId(planId.toString());
+      BillPlanBean planBean = BillPlanBean.fromMap(planMap);
+      //获取类型id
+      var typeId = map[DBConstant.BILL_TYPE_WITH_ID];
+      var typeMap = await _dbUtils.getABillType(typeId.toString());
+      BillTypeBean typeBean = BillTypeBean.fromMap(typeMap);
+      result.add(BillBean.fromDBMap(map, typeBean, planBean));
+    }
+
+    return result;
+  }
 }
