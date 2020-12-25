@@ -59,6 +59,9 @@ class _ContentState extends State<_ContentWidget> {
   //金额信息输入框控制器
   TextEditingController _amountInputController = TextEditingController();
 
+  //最长使用的三个账单类型
+  List<BillTypeBean> _billTypeTopThree = List();
+
   //标题样式
   final TextStyle _titleStyle = TextStyle(
     color: Colors.black,
@@ -68,7 +71,7 @@ class _ContentState extends State<_ContentWidget> {
   //内容文本样式
   final TextStyle _contentStyle = TextStyle(
     color: ColorConstant.COLOR_424242,
-    fontSize: 15.0,
+    fontSize: 16.0,
   );
 
   @override
@@ -76,6 +79,8 @@ class _ContentState extends State<_ContentWidget> {
     super.initState();
     //判断当月是否有消费计划
     _checkThisMonthPlan();
+    //获取最常使用的账单类型
+    _getBillTypeTopThree();
   }
 
   @override
@@ -90,52 +95,140 @@ class _ContentState extends State<_ContentWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //时间信息
-                _TimeWidget(this._titleStyle, this._contentStyle),
+                //时间和计划信息
+                _BillItemWidget(
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 5.0,
+                          left: 10.0,
+                          right: 10.0,
+                        ),
+                        child: Text(
+                          StringConstant.TIME_AND_PLAN,
+                          style: TextStyle(
+                            color: Colors.deepOrangeAccent,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
 
-                //计划信息
-                _PlanWidget(
-                    _thisMonthPlanBean, this._titleStyle, this._contentStyle),
+                      //时间信息
+                      _TimeWidget(this._titleStyle, this._contentStyle),
 
-                //分割线
-                Container(
-                  height: 1,
-                  color: ColorConstant.COLOR_8B8B7A,
-                  margin: EdgeInsets.only(top: 15.0, left: 10.0),
+                      //计划信息
+                      _PlanWidget(_thisMonthPlanBean, this._titleStyle,
+                          this._contentStyle),
+
+                      Padding(padding: EdgeInsets.only(bottom: 10.0)),
+                    ],
+                  ),
                 ),
 
-                //是否是支出信息
-                _IsPayWidget(
-                    _isPay, this._titleStyle, this._contentStyle, _changeIsPay),
+                //其它信息
+                _BillItemWidget(
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                          ),
+                          child: Text(
+                            StringConstant.OTHER_INFO,
+                            style: TextStyle(
+                              color: Colors.deepOrangeAccent,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                        //输入地址信息
+                        _InputAddressWidget(_addressInputController,
+                            _titleStyle, _contentStyle),
 
-                //选择类型信息
-                _TypeWidget(_chooseBillTypeBean, this._titleStyle,
-                    this._contentStyle, _toChooseBillTypeRoute),
-
-                //分割线
-                Container(
-                  height: 1,
-                  color: ColorConstant.COLOR_8B8B7A,
-                  margin: EdgeInsets.only(top: 15.0, left: 10.0),
+                        //输入备注信息
+                        _InputRemarkWidget(
+                            _remarkInputController, _titleStyle, _contentStyle),
+                      ],
+                    ),
+                  ),
+                  marginTop: 15.0,
                 ),
 
-                //输入地址信息
-                _InputAddressWidget(
-                    _addressInputController, _titleStyle, _contentStyle),
+                //账单类型信息
+                _BillItemWidget(
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //类型信息
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                          ),
+                          child: Text(
+                            StringConstant.TYPE_INFO,
+                            style: TextStyle(
+                              color: Colors.deepOrangeAccent,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
 
-                //输入备注信息
-                _InputRemarkWidget(
-                    _remarkInputController, _titleStyle, _contentStyle),
+                        //是否是支出和账单分类
+                        //是否是支出信息
+                        _IsPayWidget(_isPay, this._titleStyle,
+                            this._contentStyle, _changeIsPay),
 
-                //分割线
-                Container(
-                  height: 1,
-                  color: ColorConstant.COLOR_8B8B7A,
-                  margin: EdgeInsets.only(top: 15.0, left: 10.0),
+                        //选择类型信息
+                        _TypeWidget(_chooseBillTypeBean, this._titleStyle,
+                            this._contentStyle, _toChooseBillTypeRoute),
+                      ],
+                    ),
+                  ),
+                  marginTop: 15.0,
                 ),
 
                 //金额输入框
-                _InputAmountWidget(_amountInputController, _titleStyle),
+                _BillItemWidget(
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 5.0,
+                      bottom: 5.0,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                          ),
+                          child: Text(
+                            StringConstant.AMOUNT,
+                            style: TextStyle(
+                              color: Colors.deepOrangeAccent,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                        _InputAmountWidget(_amountInputController, _titleStyle),
+                      ],
+                    ),
+                  ),
+                  marginTop: 20.0,
+                ),
               ],
             ),
           ),
@@ -187,6 +280,8 @@ class _ContentState extends State<_ContentWidget> {
         context, RouteNameConstant.BILL_TYPE_LIST_ROUTE);
     if (result == null) return;
     this._chooseBillTypeBean = result;
+    //选择完类型信息后，更新权重信息
+    _updateBillTypeWeight();
     _updatePage();
   }
 
@@ -224,6 +319,21 @@ class _ContentState extends State<_ContentWidget> {
   void _changeIsPay() {
     _isPay = !_isPay;
     _updatePage();
+  }
+
+  //获取最常使用的账单类型
+  void _getBillTypeTopThree() async {
+    this._billTypeTopThree = await _dbHelper.getBillTypeWithWeightTopThree();
+    _updatePage();
+  }
+
+  //对选择的账单类型的权重加1
+  void _updateBillTypeWeight() async {
+    var currentWeight = this._chooseBillTypeBean.weight == null
+        ? 0
+        : this._chooseBillTypeBean.weight;
+    await _dbHelper.updateBillTypeWeightWithId(
+        this._chooseBillTypeBean.id, currentWeight + 1);
   }
 
   //更新页面
@@ -294,9 +404,10 @@ class _PlanWidget extends StatelessWidget {
       padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "${StringConstant.ADD_MONTH_PLAN}:",
+            "${StringConstant.MONTH_PLAN}:",
             style: _titleStyle,
           ),
           Expanded(
@@ -305,7 +416,7 @@ class _PlanWidget extends StatelessWidget {
               child: Text(
                 _planBean == null
                     ? StringConstant.NO_PLAN_REMIND
-                    : "${_planBean.planYear}年${_planBean.planMonth}月${StringConstant.MONTH_PLAN}(${_planBean.planAmount}元)",
+                    : "${_planBean.planYear}年${_planBean.planMonth}月(${_planBean.planAmount}元)",
                 style: _contentStyle,
               ),
             ),
@@ -392,7 +503,7 @@ class _TypeWidget extends StatelessWidget {
             children: [
               //账单类型
               Text(
-                "${StringConstant.BILL_TYPE}:",
+                "${StringConstant.BILL_CATEGORY}:",
                 style: _titleStyle,
               ),
 
@@ -414,6 +525,29 @@ class _TypeWidget extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+//可选择的账单类型
+class _ChooseBillTypeWidget extends StatelessWidget {
+  final BillTypeBean _bean;
+
+  _ChooseBillTypeWidget(this._bean);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        margin: EdgeInsets.only(right: 15.0),
+        padding: EdgeInsets.only(top: 2.0, bottom: 2.0, left: 3.0, right: 3.0),
+        child: Text(_bean.name),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.grey, width: 3.0)),
       ),
     );
   }
@@ -539,34 +673,50 @@ class _InputAmountWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-      child: Row(
-        children: [
-          Text(
-            "${StringConstant.AMOUNT}:",
-            style: _titleStyle,
-          ),
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              keyboardType: TextInputType.number,
-              style: _contentStyle,
-              maxLines: 1,
-              textAlign: TextAlign.end,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                    RegExp("^[0-9]*(?:\.[0-9]*)?\$")),
-                LengthLimitingTextInputFormatter(10)
-              ],
-              decoration: InputDecoration(
-                hintText: StringConstant.PLEASE_INPUT_PAY_AMOUNT,
-                hintStyle: _hintTextStyle,
-                border: InputBorder.none,
-              ),
-            ),
-          ),
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      child: TextField(
+        controller: _controller,
+        keyboardType: TextInputType.number,
+        style: _contentStyle,
+        maxLines: 1,
+        textAlign: TextAlign.start,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("^[0-9]*(?:\.[0-9]*)?\$")),
+          LengthLimitingTextInputFormatter(10)
         ],
+        decoration: InputDecoration(
+          hintText: StringConstant.PLEASE_INPUT_PAY_AMOUNT,
+          hintStyle: _hintTextStyle,
+          border: InputBorder.none,
+        ),
       ),
+    );
+  }
+}
+
+//添加消费记录每一项的信息
+class _BillItemWidget extends StatelessWidget {
+  final Widget _child;
+  double _marginTop = 10.0;
+
+  _BillItemWidget(this._child, {double marginTop}) {
+    if (marginTop != null) this._marginTop = marginTop;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      elevation: 10.0,
+      shadowColor: Colors.grey,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      margin: EdgeInsets.only(
+        top: _marginTop,
+        left: 15.0,
+        right: 15.0,
+      ),
+      child: _child,
     );
   }
 }

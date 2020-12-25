@@ -32,7 +32,9 @@ class DBUtils {
     if (_database != null) throw Exception("数据库已经打开，请直接通过databse方法获取");
     String path = (await getDatabasesPath()) + DBConstant.DB_NAME;
     _database = await openDatabase(path,
-        version: DBConstant.DB_VERSION, onCreate: _createTable);
+        version: DBConstant.DB_VERSION,
+        onCreate: _createTable,
+        onUpgrade: _updateDB);
 
     return _database;
   }
@@ -42,6 +44,22 @@ class DBUtils {
     _createBillPlanTable(database);
     _createBillTypeTable(database);
     _createBillTable(database);
+  }
+
+  //更新数据库
+  void _updateDB(Database database, int oldVersion, int newVersion) async {
+    for (int i = oldVersion; i < newVersion; i++) {
+      switch (i) {
+        case DBConstant.DB_FIRST_VERSION:
+          _updateDB2(database);
+          break;
+      }
+    }
+  }
+
+  //更新数据库到第二个版本，添加账单类型表中的权重属性
+  void _updateDB2(Database database) async {
+    await database.execute(DBConstant.UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT);
   }
 
   //创建账单计划数据表
@@ -93,6 +111,7 @@ class DBUtils {
     return await database.insert(DBConstant.BILL_PLAN_TABLE_NAME, data);
   }
 
+  ///账单类型表操作
   //从账单类型数据库中获取全部数据
   Future<List<Map<String, dynamic>>> getAllBillType() async {
     return await database.query(DBConstant.BILL_TYPE_TABLE_NAME);
@@ -123,6 +142,26 @@ class DBUtils {
         where: "${DBConstant.BILL_TYPE_ID} = ?", whereArgs: whereArgs);
   }
 
+  //从账单类型表中根据权重获取前三条数据
+  Future<List<Map<String, dynamic>>> getThreeBillTypeWithWeight() async {
+    List<Map<String, dynamic>> result =
+        await database.rawQuery(DBConstant.GET_BILL_TYPE_WITH_WEIGHT_THREE_ROW);
+    return result;
+  }
+
+  //更新选中的账单类型权重信息
+  updateBillTypeWeight(int id, Map<String, dynamic> values) async {
+    List<dynamic> arguments = List();
+    arguments.add(id);
+    database.update(
+      DBConstant.BILL_TYPE_TABLE_NAME,
+      values,
+      where: "${DBConstant.BILL_TYPE_ID} = ?",
+      whereArgs: arguments,
+    );
+  }
+
+  ///账单表操作
   //根据id获取账单类型表中的一条数据
   Future<Map<String, dynamic>> getABillType(String id) async {
     List whereArgs = List();

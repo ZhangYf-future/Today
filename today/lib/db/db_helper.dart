@@ -11,6 +11,8 @@ import 'package:today/utils/date_utils.dart';
 class DBHelper {
   DBUtils _dbUtils = DBUtils.instance;
 
+  ///账单计划表操作
+
   //读取账单计划类中的全部数据
   Future<List<BillPlanBean>> getAllBillPlan() async {
     List<Map<String, dynamic>> planListMap = await _dbUtils.getAllBillPlan();
@@ -84,9 +86,11 @@ class DBHelper {
     return StringConstant.INSERT_DATA_SUCCESS;
   }
 
+  ///账单类型操作
+
   //向账单类型表中添加一条数据
   Future<int> insertABillType(BillTypeBean bean) async {
-    return await _dbUtils.insertABillType(bean.parseDBMap());
+    return await _dbUtils.insertABillType(bean.parseInsertDBMap());
   }
 
   //从账单类型表中获取全部数据
@@ -105,6 +109,45 @@ class DBHelper {
     if (result != null) return BillTypeBean.fromMap(result);
     return null;
   }
+
+  //获取权重最高的三条类型数据
+  Future<List<BillTypeBean>> getBillTypeWithWeightTopThree() async {
+    var dbResult = await _dbUtils.getThreeBillTypeWithWeight();
+    List<BillTypeBean> list = List();
+    if (dbResult != null && dbResult.isNotEmpty) {
+      for (Map<String, dynamic> map in dbResult) {
+        list.add(BillTypeBean.fromMap(map));
+      }
+    }
+    return list;
+  }
+
+  //更新账单类型表中的一条数据
+  Future<DBResultEntity> updateBillTypeBean(BillTypeBean bean) async {
+    var map = bean.parseUpdateDBMap();
+    var dbResult = await _dbUtils.updateABillType(map, bean.id.toString());
+    var result = DBResultEntity();
+    if (dbResult >= 0) {
+      result.code = DBConstant.DB_RESULT_SUCCESS;
+      result.msg = StringConstant.OPERATE_SUCCESS;
+      result.result = dbResult;
+    } else {
+      result.code = DBConstant.DB_RESULT_FAILED;
+      result.msg = StringConstant.OPERATE_FAILED;
+      result.result = dbResult;
+    }
+
+    return result;
+  }
+
+  //根据账单类型id更新账单类型的权重数量
+  Future updateBillTypeWeightWithId(int id, int weight) async {
+    Map<String, dynamic> map = Map();
+    map[DBConstant.BILL_TYPE_WEIGHT] = weight;
+    await _dbUtils.updateBillTypeWeight(id, map);
+  }
+
+  ///账单表操作
 
   //向账单表中添加一条数据
   Future<DBResultEntity> insertABill(BillBean bean) async {

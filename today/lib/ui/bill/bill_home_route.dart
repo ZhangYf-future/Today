@@ -55,6 +55,22 @@ class _ContentState extends State<_ContentWidget> {
   //本地数据库中保存的账单列表信息
   final List<BillBean> _billBeanList = List();
 
+  //列表滚动控制器
+  final ScrollController _controller = ScrollController();
+
+  //没有数据时显示的内容
+  final Container _noDataRemindWidget = Container(
+    constraints: BoxConstraints.expand(),
+    alignment: Alignment.center,
+    child: Text(
+      StringConstant.NO_BILL_RECORD,
+      style: TextStyle(
+        color: Colors.orangeAccent,
+        fontSize: 18.0,
+      ),
+    ),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -75,13 +91,63 @@ class _ContentState extends State<_ContentWidget> {
               _consumePlan >= 0 ? _consumePlan.toString() : "",
               _consumeSurplus >= 0 ? _consumeSurplus.toString() : "",
             ),
-            //下面是一个ListView显示当月账单列表
+
             Expanded(
-                child: ListView.builder(
-                    itemCount: _billBeanList.length,
-                    itemBuilder: (context, index) => _BillItemWidget(
-                        _billBeanList[index],
-                        index == _billBeanList.length - 1))),
+              child: (!_haveBillData())
+                  ? _noDataRemindWidget
+                  : Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        //最近账单文本和查看全部文本
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 15.0, right: 15.0, bottom: 10.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                StringConstant.RECENTLY_BILL,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        StringConstant.WATCH_ALL,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_right,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        //下面是一个ListView显示当月账单列表
+                        Expanded(
+                          child: ListView.builder(
+                            controller: _controller,
+                            itemCount: _billBeanList.length,
+                            itemBuilder: (context, index) => _BillItemWidget(
+                                _billBeanList[index],
+                                index == _billBeanList.length - 1),
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
           ],
         ),
         Positioned(
@@ -172,6 +238,13 @@ class _ContentState extends State<_ContentWidget> {
     }
     //更新页面
     _updatePage();
+    //滚动到最顶部
+    _controller.jumpTo(0);
+  }
+
+  //判断是否有账单数据
+  bool _haveBillData() {
+    return this._billBeanList != null && this._billBeanList.isNotEmpty;
   }
 
   //更新页面
@@ -350,8 +423,8 @@ class _BillItemWidget extends StatelessWidget {
       shadowColor: Colors.grey,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
-      margin: EdgeInsets.only(
-          top: 10.0, left: 15.0, right: 15.0, bottom: _isLast ? 20.0 : 0),
+      margin:
+          EdgeInsets.only(left: 15.0, right: 15.0, bottom: _isLast ? 20.0 : 10),
       child: Container(
         padding: EdgeInsets.all(10.0),
         child: Column(

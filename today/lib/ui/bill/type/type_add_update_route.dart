@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
+import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
@@ -23,9 +24,6 @@ class _AddOrUpdateTypeState extends State<AddOrUpdateTypeRoute> {
   //账单类型数据
   final BillTypeBean _typeBean;
 
-  //是否可以编辑
-  bool _canEdit = false;
-
   //数据库帮助类
   final DBHelper _dbHelper = DBHelper();
 
@@ -36,38 +34,34 @@ class _AddOrUpdateTypeState extends State<AddOrUpdateTypeRoute> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _typeBean == null ? StringConstant.ADD_BILL_TYPE : _typeBean.name,
+          _typeBean == null
+              ? StringConstant.ADD_BILL_TYPE
+              : StringConstant.MODIFY_BILL_TYPE,
           style: TextStyle(
             color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
             fontSize: 16.0,
           ),
         ),
-        actions: [
-          FlatButton(
-            onPressed: () {
-              if (_typeBean != null) {
-                _canEdit = !_canEdit;
-                _updateWidget();
-              }
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 5.0, right: 5.0),
-              child: Text(
-                _typeBean == null ? "" : StringConstant.EDIT,
-                style: TextStyle(color: Colors.blueGrey, fontSize: 14.0),
-              ),
-            ),
-          )
-        ],
         centerTitle: true,
       ),
-      body: _ContentWidget(_typeBean, _canEdit, _insert),
+      body: _ContentWidget(_typeBean, _insert),
       backgroundColor: ColorConstant.COLOR_THEME_BACKGROUND,
     );
   }
 
   //添加账单类型
   void _insert(BillTypeBean bean) async {
+    if (this._typeBean != null) {
+      DBResultEntity entity = await _dbHelper.updateBillTypeBean(bean);
+      if (entity.code == DBConstant.DB_RESULT_SUCCESS) {
+        Navigator.pop(context, bean);
+      } else {
+        showInfo(context, entity.msg);
+      }
+
+      return;
+    }
+
     int result = await _dbHelper.insertABillType(bean);
     if (result > -1) {
       //添加数据成功,将当前数据返回
@@ -87,8 +81,6 @@ class _AddOrUpdateTypeState extends State<AddOrUpdateTypeRoute> {
 class _ContentWidget extends StatelessWidget {
   //需要修改的类型数据
   final BillTypeBean _typeBean;
-  //是否可以编辑
-  final bool _canEdit;
   //类型名称输入框控制器
   final TextEditingController _typeNameController = TextEditingController();
 
@@ -104,7 +96,7 @@ class _ContentWidget extends StatelessWidget {
     color: Colors.black,
   );
 
-  _ContentWidget(this._typeBean, this._canEdit, this._insertData);
+  _ContentWidget(this._typeBean, this._insertData);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -142,7 +134,10 @@ class _ContentWidget extends StatelessWidget {
           child: TextField(
             controller: _typeNameController,
             decoration: InputDecoration(
-              hintText: StringConstant.PLEASE_INPUT_TYPE_NAME,
+              hintText: this._typeBean == null ||
+                      StringUtils.isEmpty(this._typeBean.name)
+                  ? StringConstant.PLEASE_INPUT_TYPE_NAME
+                  : this._typeBean.name,
               hintStyle: TextStyle(
                 color: Colors.grey,
                 fontSize: 14.0,
@@ -169,7 +164,10 @@ class _ContentWidget extends StatelessWidget {
           child: TextField(
             controller: _typeRemarkController,
             decoration: InputDecoration(
-              hintText: StringConstant.PLEASE_INPUT_TYPE_REMARK,
+              hintText: this._typeBean == null ||
+                      StringUtils.isEmpty(this._typeBean.remark)
+                  ? StringConstant.PLEASE_INPUT_TYPE_REMARK
+                  : this._typeBean.remark,
               hintStyle: TextStyle(
                 color: Colors.grey,
                 fontSize: 14.0,
@@ -190,7 +188,9 @@ class _ContentWidget extends StatelessWidget {
                 onTap: () => _confirm(context),
                 child: Center(
                   child: Text(
-                    StringConstant.CONFIRM,
+                    this._typeBean == null
+                        ? StringConstant.CONFIRM_ADD
+                        : StringConstant.CONFIRM_MODIFY,
                     style: TextStyle(
                         color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
                         fontSize: 16.0),
@@ -222,6 +222,7 @@ class _ContentWidget extends StatelessWidget {
     var remark = _typeRemarkController.text;
 
     BillTypeBean bean = BillTypeBean();
+    if (this._typeBean != null) bean.id = this._typeBean.id;
     bean.createTime = DateUtils.getCurrentTime();
     bean.name = name;
     bean.remark = remark;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'package:today/ui/bill/bill_add_plan.dart';
-import 'package:today/ui/bill/bill_add_route.dart';
+import 'package:today/ui/bill/plan/bill_add_plan.dart';
+import 'package:today/ui/bill/action/bill_add_route.dart';
 import 'package:today/ui/bill/bill_home_route.dart';
 import 'package:today/ui/bill/type/type_list_route.dart';
 import 'package:today/ui/home_route.dart';

@@ -34,6 +34,7 @@ class ColorConstant {
 class StringConstant {
   //我的账单
   static const String MY_BILL = "我的账单";
+  static const String BILL = "账单";
 
   //添加账单计划
   static const String ADD_BILL_PLAN = "添加账单计划";
@@ -79,18 +80,25 @@ class StringConstant {
   static const String ADDRESS = "地址";
   static const String REMARK = "备注";
   static const String ADD_MONTH_PLAN = "加入月度计划";
-  static const String NO_PLAN_REMIND = "当月没有消费计划，请点击底部的按钮创建";
+  static const String NO_PLAN_REMIND = "当月没有消费计划，请点击底部按钮创建";
   static const String MONTH_PLAN = "月度计划";
   static const String CLICK_CHANGE = "点击切换";
   static const String IS = "是";
   static const String NO = "否";
-  static const String PLEASE_CHOOSE_BILL_TYPE = "点击选择账单类型信息";
+  static const String PLEASE_CHOOSE_BILL_TYPE = "点击选择账单分类信息";
   static const String BILL_TYPE = "账单类型";
+  static const String RECENTLY_BILL = "最近账单";
+  static const String WATCH_ALL = "查看全部";
+  static const String NO_BILL_RECORD = "暂无账单记录";
+  static const String TIME_AND_PLAN = "时间和计划";
+  static const String BILL_CATEGORY = "账单分类";
+  static const String OTHER_INFO = "其它信息";
 
   //账单类型列表页面
   static const String BILL_TYPE_LIST = "账单类型列表";
   static const String BILL_TYPE_LIST_NO_DATA = "暂无可选择的账单类型，请点击右下角的加号按钮添加新的账单类型";
   static const String ADD_BILL_TYPE = "新的账单类型";
+  static const String MODIFY_BILL_TYPE = "修改账单类型";
   static const String TYPE_NAME = "类型名称";
   static const String PLEASE_INPUT_TYPE_NAME = "请输入类型名称";
   static const String REMARK_INFO = "备注信息";
@@ -105,9 +113,14 @@ class StringConstant {
   static const String EDIT = "编辑";
   //说明
   static const String DESCRIPTION = "说明";
-
+  //确认添加
+  static const String CONFIRM_ADD = "确认添加";
+  //确认修改
+  static const String CONFIRM_MODIFY = "确认修改";
   //操作成功
   static const String OPERATE_SUCCESS = "操作成功";
+  //操作失败
+  static const String OPERATE_FAILED = "操作失败";
 
   //账单时间信息出错
   static const String ERROR_BILL_TIME = "请检查账单时间信息是否正确";
@@ -130,7 +143,12 @@ class DBConstant {
   //数据库名称
   static const String DB_NAME = "toDayManage.db";
   //数据库版本号
-  static const int DB_VERSION = 1;
+  static const int DB_VERSION = DB_SECOND_VERSION;
+
+  //数据库第一个版本
+  static const int DB_FIRST_VERSION = 1;
+  //数据库第二个版本，添加账单类型表的weight字段
+  static const int DB_SECOND_VERSION = 2;
 
   //账单管理部分
   //账单表名称
@@ -165,6 +183,8 @@ class DBConstant {
   static const String BILL_TYPE_REMARK = "remark";
   //创建时间
   static const String BILL_TYPE_CREATE_TIME = "createTime";
+  //权重信息，用户每选择一次则会加一
+  static const String BILL_TYPE_WEIGHT = "weight";
 
   //账单计划表部分
   //账单计划表名称
@@ -200,7 +220,8 @@ class DBConstant {
       $BILL_TYPE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
       $BILL_TYPE_NAME TEXT NOT NULL,
       $BILL_TYPE_REMARK TEXT,
-      $BILL_TYPE_CREATE_TIME TEXT NOT NULL
+      $BILL_TYPE_CREATE_TIME TEXT NOT NULL,
+      $BILL_TYPE_WEIGHT INTEGER
   );""";
 
   //创建账单计划表
@@ -217,5 +238,15 @@ class DBConstant {
   //获取账单表中的最后10条数据
   static const String GET_BILL_LAST_TEN_ROW = """
     SELECT * FROM $BILL_TABLE_NAME ORDER BY $BILL_TIME DESC LIMIT 10;
+  """;
+
+  //获取账单类型数据表中权重最大的三条数据
+  static const String GET_BILL_TYPE_WITH_WEIGHT_THREE_ROW = """
+    SELECT * FROM $BILL_TYPE_TABLE_NAME ORDER BY $BILL_TYPE_WEIGHT DESC LIMIT 3;
+  """;
+
+  //如果用户是更新数据库，则执行此方法更新数据库
+  static const String UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT = """
+    ALTER TABLE $BILL_TYPE_TABLE_NAME ADD COLUMN $BILL_TYPE_WEIGHT INTEGER;
   """;
 }

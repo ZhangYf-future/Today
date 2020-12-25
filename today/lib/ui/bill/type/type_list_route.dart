@@ -73,7 +73,7 @@ class _ContentState extends State<_ContentWidget> {
               : ListView.builder(
                   itemCount: _list.length,
                   itemBuilder: (context, position) =>
-                      _BillTypeItemWidget(_list[position])),
+                      _BillTypeItemWidget(_list[position], _toAddUpdateRoute)),
         ),
         //右下角显示添加按钮
         Positioned(
@@ -103,8 +103,7 @@ class _ContentState extends State<_ContentWidget> {
 
   //跳转到添加或者更新账单类型页面
   void _toAddUpdateRoute(BillTypeBean bean) async {
-    BillTypeBean result = await JumpUtils.toNextRouteGetResult(
-        context, AddOrUpdateTypeRoute(bean));
+    await JumpUtils.toNextRouteGetResult(context, AddOrUpdateTypeRoute(bean));
     _getAllBillType();
   }
 
@@ -127,7 +126,9 @@ class _ContentState extends State<_ContentWidget> {
 class _BillTypeItemWidget extends StatelessWidget {
   final BillTypeBean _typeBean;
 
-  _BillTypeItemWidget(this._typeBean);
+  final Function _clickEditFun;
+
+  _BillTypeItemWidget(this._typeBean, this._clickEditFun);
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +171,32 @@ class _BillTypeItemWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(_typeBean.remark),
+                ),
+
+                //编辑按钮
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //左边显示编辑文本
+                        Padding(
+                          padding: EdgeInsets.only(left: 10.0, right: 2.0),
+                          child: Text(StringConstant.EDIT),
+                        ),
+
+                        //右边显示编辑图标
+                        Icon(
+                          Icons.arrow_right_sharp,
+                          size: 18.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () => {this._clickEditFun(_typeBean)},
                 ),
               ],
             ),
