@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import 'package:today/ui/bill/list/bill_list_route.dart';
 import 'package:today/ui/bill/plan/bill_add_plan.dart';
 import 'package:today/ui/bill/action/bill_add_route.dart';
 import 'package:today/ui/bill/bill_home_route.dart';
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
         //账单类型列表页面
         RouteNameConstant.BILL_TYPE_LIST_ROUTE: (context) =>
             BillTypeListRoute(),
+        //账单列表页面
+        RouteNameConstant.BILL_LIST_ROUTE: (context) => BillListRouteWidget(),
       },
       home: SplashRoute(),
     );

@@ -130,6 +130,11 @@ class _ContentState extends State<_ContentWidget> {
                                       ),
                                     ],
                                   ),
+                                  onTap: () => {
+                                    //跳转到账单列表页面
+                                    JumpUtils.toNextRouteWithName(context,
+                                        RouteNameConstant.BILL_LIST_ROUTE)
+                                  },
                                 ),
                               ),
                             ],

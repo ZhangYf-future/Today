@@ -14,6 +14,8 @@ class RouteNameConstant {
   static const String BILL_ADD_ROUTE = "billAddRoute";
   //账单类型列表页面
   static const String BILL_TYPE_LIST_ROUTE = "billTypeListRoute";
+  //账单列表页面
+  static const String BILL_LIST_ROUTE = "billListRoute";
 }
 
 ///颜色相关常量
@@ -55,6 +57,10 @@ class StringConstant {
   static const String NO_BILL_PLAN_REMIND = "创建当月计划";
   //添加数据
   static const String ADD_BILL_RECORD = "添加到账单";
+  //全部账单
+  static const String ALL_BILL = "全部账单";
+  //暂无地址
+  static const String NO_ADDRESS = "暂无地址";
 
   static const String ERROR_INPUT_RIGHT_PLAN_AMOUNT = "请输入正确的计划金额";
   static const String ERROR_YEAR = "错误的年份信息，请检查";
