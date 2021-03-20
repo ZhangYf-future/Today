@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
-import 'package:today/utils/date_utils.dart';
+import 'package:today/utils/date_utils.dart' as dUtils;
 
 ///添加账单计划的页面
 
@@ -168,8 +168,8 @@ class _ContentState extends State<_ContentWidget> {
 
   //获取当前月份和年份
   void _getYearMonth() {
-    _year = DateUtils.getCurrentYear();
-    _month = DateUtils.getCurrentMonth();
+    _year = dUtils.DateUtils.getCurrentYear();
+    _month = dUtils.DateUtils.getCurrentMonth();
     _updatePage();
   }
 

@@ -244,7 +244,9 @@ class _ContentState extends State<_ContentWidget> {
     //更新页面
     _updatePage();
     //滚动到最顶部
-    _controller.jumpTo(0);
+    if (this._billBeanList.length > 1) {
+      _controller.jumpTo(0);
+    }
   }
 
   //判断是否有账单数据

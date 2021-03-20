@@ -8,7 +8,7 @@ import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
-import 'package:today/utils/date_utils.dart';
+import 'package:today/utils/date_utils.dart' as dUtils;
 import 'package:today/utils/jump_route_utils.dart';
 
 ///添加账单页面
@@ -289,8 +289,8 @@ class _ContentState extends State<_ContentWidget> {
   void _addBillRecord() async {
     BillBean bean = BillBean();
     bean.time = DateTime.now().millisecondsSinceEpoch;
-    bean.timeFormat =
-        DateUtils.getTimeFormat(bean.time, DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
+    bean.timeFormat = dUtils.DateUtils.getTimeFormat(
+        bean.time, dUtils.DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
     bean.isPay = _isPay;
     bean.billTypeBean = _chooseBillTypeBean;
     bean.billPlanBean = this._thisMonthPlanBean;
@@ -355,7 +355,7 @@ class _TimeWidget extends StatelessWidget {
   _TimeWidget(this._titleStyle, this._contentStyle);
 
   //现在的时间
-  final String _current = DateUtils.getCurrentTimeWithMinutes();
+  final String _current = dUtils.DateUtils.getCurrentTimeWithMinutes();
 
   @override
   Widget build(BuildContext context) {

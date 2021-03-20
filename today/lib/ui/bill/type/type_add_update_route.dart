@@ -5,7 +5,7 @@ import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
-import 'package:today/utils/date_utils.dart';
+import 'package:today/utils/date_utils.dart' as dateUtils;
 import 'package:today/utils/string_utils.dart';
 
 /// 添加或者修改账单类型
@@ -223,7 +223,8 @@ class _ContentWidget extends StatelessWidget {
 
     BillTypeBean bean = BillTypeBean();
     if (this._typeBean != null) bean.id = this._typeBean.id;
-    bean.createTime = DateUtils.getCurrentTime();
+    bean.createTime = dateUtils.DateUtils.getCurrentTime();
+
     bean.name = name;
     bean.remark = remark;
     //通过回调函数添加数据到数据库
