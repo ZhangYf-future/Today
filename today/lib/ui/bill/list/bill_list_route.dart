@@ -19,11 +19,26 @@ class BillListRouteWidget extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Icon(
+                Icons.filter_alt,
+                size: 26.0,
+              ),
+            ),
+          ),
+        ],
       ),
       body: _ContentWidget(),
       backgroundColor: ColorConstant.COLOR_THEME_BACKGROUND,
     );
   }
+
+  //跳转到按月份统计的页面
+  void _toPlanListWithMonthRoute() {}
 }
 
 class _ContentWidget extends StatefulWidget {

@@ -8,6 +8,7 @@ import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
+
 import 'package:today/utils/date_utils.dart' as date_utils;
 import 'package:today/utils/jump_route_utils.dart';
 
@@ -289,9 +290,9 @@ class _ContentState extends State<_ContentWidget> {
   void _addBillRecord() async {
     BillBean bean = BillBean();
     bean.time = DateTime.now().millisecondsSinceEpoch;
+
     bean.timeFormat = date_utils.DateUtils.getTimeFormat(
-        bean.time, date_utils.DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
-    bean.isPay = _isPay;
+        bean.time, date_utils.DateUtils.FORMAT_YYYY_MM_DD_HH_MM);    bean.isPay = _isPay;
     bean.billTypeBean = _chooseBillTypeBean;
     bean.billPlanBean = this._thisMonthPlanBean;
     bean.address = _addressInputController.text;
@@ -350,6 +351,7 @@ class _TimeWidget extends StatelessWidget {
   _TimeWidget(this._titleStyle, this._contentStyle);
 
   //现在的时间
+
   final String _current = date_utils.DateUtils.getCurrentTimeWithMinutes();
 
   @override

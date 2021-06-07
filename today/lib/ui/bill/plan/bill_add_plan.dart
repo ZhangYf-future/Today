@@ -5,7 +5,6 @@ import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart' as date_utils;
-
 ///添加账单计划的页面
 
 class AddBillPlanRoute extends StatelessWidget {
@@ -168,9 +167,10 @@ class _ContentState extends State<_ContentWidget> {
 
   //获取当前月份和年份
   void _getYearMonth() {
+
     _year = date_utils.DateUtils.getCurrentYear();
     _month = date_utils.DateUtils.getCurrentMonth();
-    _updatePage();
+        _updatePage();
   }
 
   //将用户输入的信息添加到数据表中
