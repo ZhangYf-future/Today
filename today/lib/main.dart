@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         //账单列表页面
         RouteNameConstant.BILL_LIST_ROUTE: (context) => BillListRouteWidget(),
       },
+      //启动页为闪屏页
       home: SplashRoute(),
     );
   }

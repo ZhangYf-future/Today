@@ -244,7 +244,7 @@ class _ContentState extends State<_ContentWidget> {
     //更新页面
     _updatePage();
     //滚动到最顶部
-    if(_billBeanList.isNotEmpty) {
+    if (this._billBeanList.length > 1) {
       _controller.jumpTo(0);
     }
   }

@@ -10,13 +10,14 @@ buildscript {
         maven {
             url 'https://maven.aliyun.com/repository/central'
         }
-        google()
-        jcenter()
+        //google()
+        //jcenter()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
     }
 }
 
@@ -31,6 +32,7 @@ allprojects {
         maven {
             url 'https://maven.aliyun.com/repository/central'
         }
+        maven { url "https://storage.googleapis.com/download.flutter.io" }
         google()
         jcenter()
     }

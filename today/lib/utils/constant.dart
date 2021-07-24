@@ -99,6 +99,8 @@ class StringConstant {
   static const String TIME_AND_PLAN = "时间和计划";
   static const String BILL_CATEGORY = "账单分类";
   static const String OTHER_INFO = "其它信息";
+  static const String ADDRESS_AND_REMARK = "地址和备注";
+  static const String PAY_TYPE = "支出类型";
 
   //账单类型列表页面
   static const String BILL_TYPE_LIST = "账单类型列表";

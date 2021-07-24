@@ -8,7 +8,8 @@ import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
-import 'package:today/utils/date_utils.dart';
+
+import 'package:today/utils/date_utils.dart' as date_utils;
 import 'package:today/utils/jump_route_utils.dart';
 
 ///添加账单页面
@@ -60,7 +61,7 @@ class _ContentState extends State<_ContentWidget> {
   TextEditingController _amountInputController = TextEditingController();
 
   //最长使用的三个账单类型
-  List<BillTypeBean> _billTypeTopThree = List();
+  List<BillTypeBean> _billTypeTopThree = List.empty();
 
   //标题样式
   final TextStyle _titleStyle = TextStyle(
@@ -128,7 +129,7 @@ class _ContentState extends State<_ContentWidget> {
                   ),
                 ),
 
-                //其它信息
+                //地址和备注
                 _BillItemWidget(
                   Padding(
                     padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
@@ -142,7 +143,7 @@ class _ContentState extends State<_ContentWidget> {
                             right: 10.0,
                           ),
                           child: Text(
-                            StringConstant.OTHER_INFO,
+                            StringConstant.ADDRESS_AND_REMARK,
                             style: TextStyle(
                               color: Colors.deepOrangeAccent,
                               fontSize: 16.0,
@@ -177,7 +178,7 @@ class _ContentState extends State<_ContentWidget> {
                             right: 10.0,
                           ),
                           child: Text(
-                            StringConstant.TYPE_INFO,
+                            StringConstant.PAY_TYPE,
                             style: TextStyle(
                               color: Colors.deepOrangeAccent,
                               fontSize: 16.0,
@@ -186,9 +187,9 @@ class _ContentState extends State<_ContentWidget> {
                         ),
 
                         //是否是支出和账单分类
-                        //是否是支出信息
-                        _IsPayWidget(_isPay, this._titleStyle,
-                            this._contentStyle, _changeIsPay),
+                        //暂时取消是否为支出信息，默认即为支出，不会保存收入信息
+                        // _IsPayWidget(_isPay, this._titleStyle,
+                        //     this._contentStyle, _changeIsPay),
 
                         //选择类型信息
                         _TypeWidget(_chooseBillTypeBean, this._titleStyle,
@@ -289,21 +290,16 @@ class _ContentState extends State<_ContentWidget> {
   void _addBillRecord() async {
     BillBean bean = BillBean();
     bean.time = DateTime.now().millisecondsSinceEpoch;
-    bean.timeFormat =
-        DateUtils.getTimeFormat(bean.time, DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
-    bean.isPay = _isPay;
+
+    bean.timeFormat = date_utils.DateUtils.getTimeFormat(
+        bean.time, date_utils.DateUtils.FORMAT_YYYY_MM_DD_HH_MM);    bean.isPay = _isPay;
     bean.billTypeBean = _chooseBillTypeBean;
     bean.billPlanBean = this._thisMonthPlanBean;
     bean.address = _addressInputController.text;
     bean.remark = _remarkInputController.text;
-    bean.amount = double.parse(_amountInputController.text, (error) {
-      //如果数据转换出错，则设置输入框为空
-      _amountInputController.text = "";
-      //将之前设置的地址和备注信息重新设置上去
-      _addressInputController.text = bean.address;
-      _remarkInputController.text = bean.remark;
-      return -1;
-    });
+    //尝试转换用户输入的数据
+    double amount = double.tryParse(_amountInputController.text);
+    bean.amount = amount == null ? -1 : amount;
 
     //添加数据
     DBResultEntity entity = await _dbHelper.insertABill(bean);
@@ -355,7 +351,8 @@ class _TimeWidget extends StatelessWidget {
   _TimeWidget(this._titleStyle, this._contentStyle);
 
   //现在的时间
-  final String _current = DateUtils.getCurrentTimeWithMinutes();
+
+  final String _current = date_utils.DateUtils.getCurrentTimeWithMinutes();
 
   @override
   Widget build(BuildContext context) {
@@ -398,6 +395,7 @@ class _PlanWidget extends StatelessWidget {
 
   //内容文本样式
   final TextStyle _contentStyle;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -431,8 +429,10 @@ class _PlanWidget extends StatelessWidget {
 class _IsPayWidget extends StatelessWidget {
   //标题样式
   final TextStyle _titleStyle;
+
   //内容文本样式
   final TextStyle _contentStyle;
+
   //是否是支出
   final bool _isPay;
 
@@ -442,6 +442,7 @@ class _IsPayWidget extends StatelessWidget {
   //构造函数中传入是否是支出
   _IsPayWidget(
       this._isPay, this._titleStyle, this._contentStyle, this._clickFunction);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
