@@ -157,6 +157,8 @@ class _BillContentItemWidget extends StatelessWidget {
 
   _BillContentItemWidget(this._billBean);
 
+  //测试git
+
   @override
   Widget build(BuildContext context) {
     return Card(
