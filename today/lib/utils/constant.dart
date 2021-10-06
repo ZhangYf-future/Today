@@ -24,6 +24,8 @@ class ColorConstant {
   static const Color COLOR_THEME_BACKGROUND = Colors.greenAccent;
   //默认的文本颜色为白色
   static const Color COLOR_DEFAULT_TEXT_COLOR = Colors.white;
+  //红色
+  static const Color COLOR_RED = Colors.redAccent;
   //灰色
   static const Color COLOR_424242 = Color.fromARGB(255, 66, 66, 66);
   static const Color Color_DCDCDC = Color.fromARGB(255, 220, 220, 220);
@@ -34,6 +36,9 @@ class ColorConstant {
 
 ///字符串相关的常量
 class StringConstant {
+  //首页
+  static const String MY_DAY = "我的一天";
+
   //我的账单
   static const String MY_BILL = "我的账单";
   static const String BILL = "账单";
@@ -86,7 +91,7 @@ class StringConstant {
   static const String ADDRESS = "地址";
   static const String REMARK = "备注";
   static const String ADD_MONTH_PLAN = "加入月度计划";
-  static const String NO_PLAN_REMIND = "当月没有消费计划，请点击底部按钮创建";
+  static const String NO_PLAN_REMIND = "请先点击底部按钮创建当月消费计划";
   static const String MONTH_PLAN = "月度计划";
   static const String CLICK_CHANGE = "点击切换";
   static const String IS = "是";
@@ -257,4 +262,12 @@ class DBConstant {
   static const String UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT = """
     ALTER TABLE $BILL_TYPE_TABLE_NAME ADD COLUMN $BILL_TYPE_WEIGHT INTEGER;
   """;
+}
+
+//首页Block数据类型部分常量
+class HomeBlockConstant {
+  //首页账单类型
+  static const HOME_BLOCK_TYPE_BILL = "账单";
+  static const HOME_BLOCK_NAME_BILL = "我的账单";
+  static const HOME_BLOCK_TITLE_BILL = "记录账单信息 -->";
 }

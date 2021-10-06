@@ -5,7 +5,7 @@ import 'package:today/ui/bill/plan/bill_add_plan.dart';
 import 'package:today/ui/bill/action/bill_add_route.dart';
 import 'package:today/ui/bill/bill_home_route.dart';
 import 'package:today/ui/bill/type/type_list_route.dart';
-import 'package:today/ui/home_route.dart';
+import 'package:today/ui/home/home_route.dart';
 import 'package:today/ui/splash_route.dart';
 import 'package:today/utils/constant.dart';
 
