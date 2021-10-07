@@ -16,6 +16,9 @@ class RouteNameConstant {
   static const String BILL_TYPE_LIST_ROUTE = "billTypeListRoute";
   //账单列表页面
   static const String BILL_LIST_ROUTE = "billListRoute";
+
+  //天气首页
+  static const String WEATHER_HOME_ROUTE = "weatherHomeRoute";
 }
 
 ///颜色相关常量
@@ -270,4 +273,9 @@ class HomeBlockConstant {
   static const HOME_BLOCK_TYPE_BILL = "账单";
   static const HOME_BLOCK_NAME_BILL = "我的账单";
   static const HOME_BLOCK_TITLE_BILL = "记录账单信息 -->";
+
+  //首页天气类型
+  static const HOME_BLOCK_TYPE_WEATHER = "天气";
+  static const HOME_BLOCK_NAME_WEATHER = "今日天气";
+  static const HOME_BLOCK_TITLE_WEATHER = "查看想起天气 -->";
 }

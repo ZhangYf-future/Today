@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/ui/home/home_block_bill.dart';
+import 'package:today/ui/home/home_block_weather.dart';
 import 'package:today/ui/home/home_route_mvp.dart';
 import 'package:today/utils/constant.dart';
 
@@ -46,8 +47,13 @@ class HomeRoute extends StatelessWidget implements BaseView {
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (context, position) {
                 switch (this._homeBlockList[position].type) {
+                  //账单
                   case HomeBlockConstant.HOME_BLOCK_TYPE_BILL:
                     return HomeBillBlockWidget(this._homeBlockList[position]);
+                  //天气
+                  case HomeBlockConstant.HOME_BLOCK_TYPE_WEATHER:
+                    return HomeBlockWeatherWidget();
+                  //默认返回null
                   default:
                     return null;
                 }

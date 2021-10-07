@@ -7,6 +7,7 @@ import 'package:today/ui/bill/bill_home_route.dart';
 import 'package:today/ui/bill/type/type_list_route.dart';
 import 'package:today/ui/home/home_route.dart';
 import 'package:today/ui/splash_route.dart';
+import 'package:today/ui/weather/home/weather_home_route.dart';
 import 'package:today/utils/constant.dart';
 
 void main() {
@@ -43,6 +44,8 @@ class MyApp extends StatelessWidget {
             BillTypeListRoute(),
         //账单列表页面
         RouteNameConstant.BILL_LIST_ROUTE: (context) => BillListRouteWidget(),
+        //天气首页
+        RouteNameConstant.WEATHER_HOME_ROUTE: (context) => WeatherHomeRoute(),
       },
       //启动页为闪屏页
       home: SplashRoute(),
