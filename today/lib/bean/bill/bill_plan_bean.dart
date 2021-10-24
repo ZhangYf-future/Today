@@ -11,11 +11,11 @@ class BillPlanBean {
     this.createTime = map[DBConstant.BILL_PLAN_CREATE_TIME];
   }
 
-  int id;
-  double planAmount;
-  int planYear;
-  int planMonth;
-  String createTime;
+  int id = -1;
+  double planAmount = 0.0;
+  int planYear = -1;
+  int planMonth = -1;
+  String createTime = "";
 
   //将当前类中的数据转换成Map保存在数据库中
   //id将会自动生成，传空即可

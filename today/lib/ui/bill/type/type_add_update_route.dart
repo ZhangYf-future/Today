@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
@@ -12,9 +13,9 @@ import 'package:today/utils/string_utils.dart';
 
 class AddOrUpdateTypeRoute extends StatefulWidget {
   //上个页面传递过来的类型信息
-  final BillTypeBean _typeBean;
+  final BillTypeBean? _typeBean;
 
-  AddOrUpdateTypeRoute(this._typeBean, {Key key}) : super(key: key);
+  AddOrUpdateTypeRoute(this._typeBean, {Key? key}) : super(key: key);
 
   @override
   _AddOrUpdateTypeState createState() => _AddOrUpdateTypeState(_typeBean);
@@ -22,7 +23,7 @@ class AddOrUpdateTypeRoute extends StatefulWidget {
 
 class _AddOrUpdateTypeState extends State<AddOrUpdateTypeRoute> {
   //账单类型数据
-  final BillTypeBean _typeBean;
+  final BillTypeBean? _typeBean;
 
   //数据库帮助类
   final DBHelper _dbHelper = DBHelper();
@@ -56,7 +57,7 @@ class _AddOrUpdateTypeState extends State<AddOrUpdateTypeRoute> {
       if (entity.code == DBConstant.DB_RESULT_SUCCESS) {
         Navigator.pop(context, bean);
       } else {
-        showInfo(context, entity.msg);
+        showInfo(entity.msg);
       }
 
       return;
@@ -80,7 +81,7 @@ class _AddOrUpdateTypeState extends State<AddOrUpdateTypeRoute> {
 //内容部分
 class _ContentWidget extends StatelessWidget {
   //需要修改的类型数据
-  final BillTypeBean _typeBean;
+  final BillTypeBean? _typeBean;
   //类型名称输入框控制器
   final TextEditingController _typeNameController = TextEditingController();
 
@@ -135,9 +136,9 @@ class _ContentWidget extends StatelessWidget {
             controller: _typeNameController,
             decoration: InputDecoration(
               hintText: this._typeBean == null ||
-                      StringUtils.isEmpty(this._typeBean.name)
+                      StringUtils.isEmpty(this._typeBean!.name)
                   ? StringConstant.PLEASE_INPUT_TYPE_NAME
-                  : this._typeBean.name,
+                  : this._typeBean!.name,
               hintStyle: TextStyle(
                 color: Colors.grey,
                 fontSize: 14.0,
@@ -165,9 +166,9 @@ class _ContentWidget extends StatelessWidget {
             controller: _typeRemarkController,
             decoration: InputDecoration(
               hintText: this._typeBean == null ||
-                      StringUtils.isEmpty(this._typeBean.remark)
+                      StringUtils.isEmpty(this._typeBean!.remark)
                   ? StringConstant.PLEASE_INPUT_TYPE_REMARK
-                  : this._typeBean.remark,
+                  : this._typeBean!.remark,
               hintStyle: TextStyle(
                 color: Colors.grey,
                 fontSize: 14.0,
@@ -215,14 +216,14 @@ class _ContentWidget extends StatelessWidget {
   void _confirm(BuildContext context) {
     var name = _typeNameController.text;
     if (StringUtils.isEmpty(name)) {
-      showInfo(context, StringConstant.PLEASE_INPUT_TYPE_NAME);
+      showInfo(StringConstant.PLEASE_INPUT_TYPE_NAME);
       return;
     }
 
     var remark = _typeRemarkController.text;
 
     BillTypeBean bean = BillTypeBean();
-    if (this._typeBean != null) bean.id = this._typeBean.id;
+    if (this._typeBean != null) bean.id = this._typeBean!.id;
     bean.createTime = date_utils.DateUtils.getCurrentTime();
     bean.name = name;
     bean.remark = remark;

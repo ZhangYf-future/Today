@@ -1,29 +1,34 @@
+import 'dart:ffi';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:today/utils/constant.dart';
+import 'package:today/utils/date_utils.dart';
+import 'package:today/utils/log_utils.dart';
 
 ///数据库工具类
 class DBUtils {
-  static DBUtils _instance;
+  //单例模式
+  static DBUtils? _instance;
   static DBUtils get instance => _getInstance();
   static DBUtils _getInstance() {
     if (_instance == null) {
       _instance = DBUtils._single();
     }
-    return _instance;
+    return _instance!;
   }
 
   DBUtils._single() {
     //私有化构造函数
   }
 
-  //工厂模式
+  //工厂构造函数
   factory DBUtils() => _getInstance();
 
   //已经打开的数据库连接
-  Database _database;
+  Database? _database;
   Database get database {
     if (_database == null) throw Exception("请先执行openDB方法打开数据库");
-    return _database;
+    return _database!;
   }
 
   //打开一个数据库,如果数据库不存在，则会自动创建一个数据库,同时在数据库创建完成后会创建相应的数据表
@@ -36,11 +41,12 @@ class DBUtils {
         onCreate: _createTable,
         onUpgrade: _updateDB);
 
-    return _database;
+    return _database!;
   }
 
   //创建数据表
   void _createTable(Database database, int version) async {
+    print("will create tables");
     _createBillPlanTable(database);
     _createBillTypeTable(database);
     _createBillTable(database);
@@ -48,10 +54,16 @@ class DBUtils {
 
   //更新数据库
   void _updateDB(Database database, int oldVersion, int newVersion) async {
+    Logs.ez("_updateDB old version is $oldVersion,new version is $newVersion");
     for (int i = oldVersion; i < newVersion; i++) {
       switch (i) {
         case DBConstant.DB_FIRST_VERSION:
+          //当前处于第一个版本,
           _updateDB2(database);
+          break;
+        case DBConstant.DB_SECOND_VERSION:
+          //当前处于第二个版本
+          _updateDB3(database);
           break;
       }
     }
@@ -60,6 +72,11 @@ class DBUtils {
   //更新数据库到第二个版本，添加账单类型表中的权重属性
   void _updateDB2(Database database) async {
     await database.execute(DBConstant.UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT);
+  }
+
+  //更新数据库到第三个版本，添加天气城市信息
+  void _updateDB3(Database database) async {
+    await database.execute(DBConstant.CREATE_WEATHER_CITY_TABLE);
   }
 
   //创建账单计划数据表
@@ -83,8 +100,8 @@ class DBUtils {
   }
 
   //根据账单计划id获取账单计划表中的一条数据
-  Future<Map<String, dynamic>> getBillPlanWithId(String id) async {
-    var values = List();
+  Future<Map<String, dynamic>?> getBillPlanWithId(String id) async {
+    var values = List.empty(growable: true);
     values.add(id);
     var result = await database.query(DBConstant.BILL_PLAN_TABLE_NAME,
         where: "${DBConstant.BILL_PLAN_ID} = ?", whereArgs: values);
@@ -97,10 +114,10 @@ class DBUtils {
   //根据账单计划年度和月度获取当前计划信息
   Future<List<Map<String, dynamic>>> getBillPlanWithDate(
       int year, int month) async {
-    var list = List();
+    var list = List.empty(growable: true);
     list.add(year);
     list.add(month);
-    return await _database.query(DBConstant.BILL_PLAN_TABLE_NAME,
+    return await _database!.query(DBConstant.BILL_PLAN_TABLE_NAME,
         where:
             "${DBConstant.BILL_PLAN_YEAR} = ? AND ${DBConstant.BILL_PLAN_MONTH} = ?",
         whereArgs: list);
@@ -124,7 +141,7 @@ class DBUtils {
 
   //根据账单类型id修改账单类型表中的数据
   Future<int> updateABillType(Map<String, dynamic> map, String id) async {
-    List whereArgs = List();
+    List whereArgs = List.empty(growable: true);
     whereArgs.add(id);
     return await database.update(
       DBConstant.BILL_TYPE_TABLE_NAME,
@@ -136,7 +153,7 @@ class DBUtils {
 
   //根据id删除张单类型表中的一条数据
   Future<int> deleteABillType(String id) async {
-    List whereArgs = List();
+    List whereArgs = List.empty(growable: true);
     whereArgs.add(id);
     return await database.delete(DBConstant.BILL_TYPE_TABLE_NAME,
         where: "${DBConstant.BILL_TYPE_ID} = ?", whereArgs: whereArgs);
@@ -151,7 +168,7 @@ class DBUtils {
 
   //更新选中的账单类型权重信息
   updateBillTypeWeight(int id, Map<String, dynamic> values) async {
-    List<dynamic> arguments = List();
+    List<dynamic> arguments = List.empty(growable: true);
     arguments.add(id);
     database.update(
       DBConstant.BILL_TYPE_TABLE_NAME,
@@ -163,8 +180,8 @@ class DBUtils {
 
   ///账单表操作
   //根据id获取账单类型表中的一条数据
-  Future<Map<String, dynamic>> getABillType(String id) async {
-    List whereArgs = List();
+  Future<Map<String, dynamic>?> getABillType(String id) async {
+    List whereArgs = List.empty(growable: true);
     whereArgs.add(id);
     var result = await database.query(DBConstant.BILL_TYPE_TABLE_NAME,
         where: "${DBConstant.BILL_TYPE_ID} = ?", whereArgs: whereArgs);
@@ -189,14 +206,30 @@ class DBUtils {
 
   //根据计划id获取和当前计划id相关的金额
   Future<List<Map<String, dynamic>>> getBillAmountWithPlanId(int planId) async {
-    var arguments = List();
+    var arguments = List.empty(growable: true);
     arguments.add(planId);
     //这里只需要获取金额数据
-    var columnNameList = List<String>();
+    var columnNameList = List<String>.empty(growable: true);
     columnNameList.add(DBConstant.BILL_AMOUNT);
     return await database.query(DBConstant.BILL_TABLE_NAME,
         columns: columnNameList,
         where: "${DBConstant.BILL_PLAN_WITH_ID} = ? ",
         whereArgs: arguments);
+  }
+
+  //获取账单表中今天的数据
+  Future<List<Map<String, dynamic>>> getTodayBill() async {
+    var todayStart = DateUtils.getTodayStart();
+    var todayEnd = DateUtils.getTodayEnd();
+    var where =
+        "${DBConstant.BILL_TIME} >= $todayStart AND ${DBConstant.BILL_TIME} <= $todayEnd";
+    //这里只需要获取金额数据
+    var columnNameList = List<String>.empty(growable: true);
+    columnNameList.add(DBConstant.BILL_AMOUNT);
+    return await database.query(
+      DBConstant.BILL_TABLE_NAME,
+      columns: columnNameList,
+      where: where,
+    );
   }
 }

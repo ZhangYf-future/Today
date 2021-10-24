@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart' as date_utils;
@@ -43,10 +44,10 @@ class _ContentState extends State<_ContentWidget> {
   final DBHelper _dbHelper = DBHelper();
 
   //当前年份
-  int _year;
+  int _year = 0;
 
   //当前月份
-  int _month;
+  int _month = 0;
 
   //用户输入计划金额的controller
   final _amountController = TextEditingController();

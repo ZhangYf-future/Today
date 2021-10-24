@@ -5,6 +5,7 @@ import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
@@ -33,7 +34,7 @@ class BillAddRoute extends StatelessWidget {
 ///内容部分
 class _ContentWidget extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
+  _ContentState createState() {
     return _ContentState();
   }
 }
@@ -43,13 +44,13 @@ class _ContentState extends State<_ContentWidget> {
   final DBHelper _dbHelper = new DBHelper();
 
   //默认认为当月没有创建消费计划
-  BillPlanBean _thisMonthPlanBean;
+  BillPlanBean? _thisMonthPlanBean;
 
   //默认是支出信息
   bool _isPay = true;
 
   //用户当前选择的账单类型
-  BillTypeBean _chooseBillTypeBean;
+  BillTypeBean? _chooseBillTypeBean;
 
   //地址信息输入框控制器
   TextEditingController _addressInputController = TextEditingController();
@@ -292,19 +293,21 @@ class _ContentState extends State<_ContentWidget> {
     bean.time = DateTime.now().millisecondsSinceEpoch;
 
     bean.timeFormat = date_utils.DateUtils.getTimeFormat(
-        bean.time, date_utils.DateUtils.FORMAT_YYYY_MM_DD_HH_MM);    bean.isPay = _isPay;
+        bean.time, date_utils.DateUtils.FORMAT_YYYY_MM_DD_HH_MM);
+    bean.isPay = _isPay;
     bean.billTypeBean = _chooseBillTypeBean;
     bean.billPlanBean = this._thisMonthPlanBean;
     bean.address = _addressInputController.text;
     bean.remark = _remarkInputController.text;
     //尝试转换用户输入的数据
-    double amount = double.tryParse(_amountInputController.text);
-    bean.amount = amount == null ? -1 : amount;
+    double? inputAmount = double.tryParse(_amountInputController.text);
+    double amount = inputAmount == null ? 0 : inputAmount;
+    bean.amount = amount;
 
     //添加数据
     DBResultEntity entity = await _dbHelper.insertABill(bean);
     if (entity.code != DBConstant.DB_RESULT_SUCCESS) {
-      showInfo(context, entity.msg);
+      showInfo(entity.msg);
     } else {
       //携带当前数据返回到上个页面
       Navigator.pop(context, bean);
@@ -325,11 +328,11 @@ class _ContentState extends State<_ContentWidget> {
 
   //对选择的账单类型的权重加1
   void _updateBillTypeWeight() async {
-    var currentWeight = this._chooseBillTypeBean.weight == null
+    var currentWeight = this._chooseBillTypeBean?.weight == null
         ? 0
-        : this._chooseBillTypeBean.weight;
+        : this._chooseBillTypeBean?.weight;
     await _dbHelper.updateBillTypeWeightWithId(
-        this._chooseBillTypeBean.id, currentWeight + 1);
+        this._chooseBillTypeBean!.id, currentWeight! + 1);
   }
 
   //更新页面
@@ -385,7 +388,7 @@ class _TimeWidget extends StatelessWidget {
 //计划信息Widget
 class _PlanWidget extends StatelessWidget {
   //计划信息数据
-  final BillPlanBean _planBean;
+  final BillPlanBean? _planBean;
 
   //构造函数传入计划数据
   _PlanWidget(this._planBean, this._titleStyle, this._contentStyle);
@@ -414,7 +417,7 @@ class _PlanWidget extends StatelessWidget {
               child: Text(
                 _planBean == null
                     ? StringConstant.NO_PLAN_REMIND
-                    : "${_planBean.planYear}年${_planBean.planMonth}月(${_planBean.planAmount}元)",
+                    : "${_planBean!.planYear}年${_planBean!.planMonth}月(${_planBean!.planAmount}元)",
                 style: _contentStyle,
               ),
             ),
@@ -486,7 +489,7 @@ class _TypeWidget extends StatelessWidget {
   final Function _toChooseBillTypeFunction;
 
   //选中的账单类型
-  final BillTypeBean _chooseBillTypeBean;
+  final BillTypeBean? _chooseBillTypeBean;
 
   _TypeWidget(this._chooseBillTypeBean, this._titleStyle, this._contentStyle,
       this._toChooseBillTypeFunction);
@@ -516,7 +519,7 @@ class _TypeWidget extends StatelessWidget {
                     color: Colors.transparent,
                     child: Text(
                       _chooseBillTypeBean != null
-                          ? _chooseBillTypeBean.name
+                          ? _chooseBillTypeBean!.name
                           : StringConstant.PLEASE_CHOOSE_BILL_TYPE,
                       style: _contentStyle,
                     ),
@@ -700,7 +703,7 @@ class _BillItemWidget extends StatelessWidget {
   final Widget _child;
   double _marginTop = 10.0;
 
-  _BillItemWidget(this._child, {double marginTop}) {
+  _BillItemWidget(this._child, {double? marginTop}) {
     if (marginTop != null) this._marginTop = marginTop;
   }
 

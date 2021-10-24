@@ -1,5 +1,7 @@
+import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:today/net/http_dio.dart';
 import 'package:today/ui/bill/list/bill_list_route.dart';
 import 'package:today/ui/bill/plan/bill_add_plan.dart';
 import 'package:today/ui/bill/action/bill_add_route.dart';
@@ -12,16 +14,22 @@ import 'package:today/utils/constant.dart';
 
 void main() {
   runApp(MyApp());
+  //配置网络信息
+  DioUtils.dioConfig();
 }
 
 //弹出toast
-void showInfo(BuildContext context, String msg) {
-  Toast.show(msg, context, duration: 2);
+void showInfo(String msg) {
+  Fluttertoast.showToast(msg: msg);
 }
 
 //APP入口
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  MyApp() {
+    //设置高德地图key
+    AMapFlutterLocation.setApiKey("	ef93cf1114922c52a43920a2eab08923", "");
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

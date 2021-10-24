@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/ui/bill/type/type_add_update_route.dart';
 import 'package:today/utils/constant.dart';
@@ -35,7 +36,7 @@ class _ContentWidget extends StatefulWidget {
 
 class _ContentState extends State<_ContentWidget> {
   //全部的账单类型列表
-  List<BillTypeBean> _list = List();
+  List<BillTypeBean> _list = List.empty(growable: true);
 
   //数据库帮助类
   final DBHelper _dbHelper = DBHelper();
@@ -102,7 +103,7 @@ class _ContentState extends State<_ContentWidget> {
   }
 
   //跳转到添加或者更新账单类型页面
-  void _toAddUpdateRoute(BillTypeBean bean) async {
+  void _toAddUpdateRoute(BillTypeBean? bean) async {
     await JumpUtils.toNextRouteGetResult(context, AddOrUpdateTypeRoute(bean));
     _getAllBillType();
   }

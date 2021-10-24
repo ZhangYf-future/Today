@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
 
@@ -48,7 +49,7 @@ class _ContentWidget extends StatefulWidget {
 
 class _ContentState extends State<_ContentWidget> {
   //数据库中全部的账单列表
-  final List<BillBean> _billBeanList = List();
+  final List<BillBean> _billBeanList = List.empty(growable: true);
 
   //数据库帮助类
   final DBHelper _helper = DBHelper();
@@ -183,7 +184,7 @@ class _BillContentItemWidget extends StatelessWidget {
               children: [
                 //类型信息
                 Text(
-                  _billBean.billTypeBean.name,
+                  _billBean.billTypeBean!.name,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16.0,

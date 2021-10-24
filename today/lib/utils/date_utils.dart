@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:today/utils/log_utils.dart';
 
 class DateUtils {
   //时间格式
@@ -19,6 +20,12 @@ class DateUtils {
     return DateFormat(FORMAT_YYYY_MM_DD_HH_MM).format(current);
   }
 
+  //获取当前时间，精确到秒
+  static String getCurrentTimeWithSeconds() {
+    DateTime current = DateTime.now();
+    return DateFormat(FORMAT_HH_MM_SS).format(current);
+  }
+
   //获取当前的年份
   static int getCurrentYear() {
     return DateTime.now().year;
@@ -33,5 +40,24 @@ class DateUtils {
   static String getTimeFormat(int timeMillions, String format) {
     var time = DateTime.fromMillisecondsSinceEpoch(timeMillions);
     return DateFormat(format).format(time);
+  }
+
+  //获取今天结束的时间
+  static int getTodayEnd() {
+    //获取现在的时间
+    DateTime now = DateTime.now();
+    //获取今天结束的时间,23:59:59
+    DateTime todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    Logs.ez("today end time is ${todayEnd.millisecondsSinceEpoch}");
+    return todayEnd.millisecondsSinceEpoch;
+  }
+
+  //获取今天开始的时间戳 00:00:00
+  static int getTodayStart() {
+    //获取现在的时间
+    DateTime now = DateTime.now();
+    DateTime todayEnd = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    Logs.ez("today start time is ${todayEnd.millisecondsSinceEpoch}");
+    return todayEnd.millisecondsSinceEpoch;
   }
 }

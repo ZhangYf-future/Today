@@ -4,11 +4,11 @@ import 'package:today/utils/date_utils.dart';
 ///账单类型数据类
 
 class BillTypeBean {
-  int id;
-  String name;
-  String remark;
-  String createTime;
-  int weight;
+  int id = -1;
+  String name = "";
+  String remark = "";
+  String createTime = "";
+  int weight = -1;
 
   BillTypeBean();
 

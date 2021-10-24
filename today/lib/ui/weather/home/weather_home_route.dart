@@ -9,17 +9,17 @@ class WeatherHomeRoute extends StatefulWidget {
   WeatherHomeState createState() => WeatherHomeState();
 }
 
-class WeatherHomeState extends State<WeatherHomeRoute> implements BaseView {
-  WeatherHomePresenter _permission;
+class WeatherHomeState extends BaseState<WeatherHomeRoute> {
+  WeatherHomePresenter? _presenter;
 
   WeatherHomeState() {
-    _permission = WeatherHomePresenter(this);
+    _presenter = WeatherHomePresenter(this);
   }
 
   @override
   void initState() {
     super.initState();
-    _permission.initState();
+    _presenter!.initState();
   }
 
   @override

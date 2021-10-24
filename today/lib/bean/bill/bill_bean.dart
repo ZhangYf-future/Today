@@ -6,22 +6,22 @@ import 'package:today/utils/date_utils.dart';
 /// 账单管理数据类
 
 class BillBean {
-  int id;
-  double amount; //金额
+  int? id;
+  double amount = 0; //金额
   int time = -1; //时间,默认-1
-  String timeFormat; //格式化后的时间
-  String address; //位置
-  String remark; //备注
-  bool isPay; //是否是支出
-  BillTypeBean billTypeBean; //类型信息
-  BillPlanBean billPlanBean; //计划信息
+  String timeFormat = ""; //格式化后的时间
+  String address = ""; //位置
+  String remark = ""; //备注
+  bool isPay = false; //是否是支出
+  BillTypeBean? billTypeBean; //类型信息
+  BillPlanBean? billPlanBean; //计划信息
 
   //构造函数
   BillBean();
 
   //从数据库中的map信息中构建类
-  BillBean.fromDBMap(Map<String, dynamic> billMap, BillTypeBean billTypeBean,
-      BillPlanBean billPlanBean) {
+  BillBean.fromDBMap(Map<String, dynamic> billMap, BillTypeBean? billTypeBean,
+      BillPlanBean? billPlanBean) {
     this.id = billMap[DBConstant.BILL_ID];
     this.amount = billMap[DBConstant.BILL_AMOUNT];
     this.time = billMap[DBConstant.BILL_TIME];
@@ -44,8 +44,8 @@ class BillBean {
     map[DBConstant.BILL_ADDRESS] = address;
     map[DBConstant.BILL_REMARK] = remark;
     map[DBConstant.BILL_IS_PAY] = isPay;
-    map[DBConstant.BILL_TYPE_WITH_ID] = billTypeBean.id;
-    map[DBConstant.BILL_PLAN_WITH_ID] = billPlanBean.id;
+    map[DBConstant.BILL_TYPE_WITH_ID] = billTypeBean?.id;
+    map[DBConstant.BILL_PLAN_WITH_ID] = billPlanBean?.id;
 
     return map;
   }
