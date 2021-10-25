@@ -12,6 +12,7 @@ import 'package:today/constact/constact_string.dart' as cs;
 class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
   HomeRoutePresenter(HomeState view) : super(HomeRouteModel(), view);
 
+
   //获取首页列表数据
   List<HomeBlockBean> getHomeBlocks() => this.model.createHomeBlocks();
 

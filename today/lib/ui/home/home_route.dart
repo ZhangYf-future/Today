@@ -4,6 +4,8 @@ import 'package:today/base/base_view.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_event.dart';
+import 'package:today/event/event_bill.dart';
 import 'package:today/ui/home/home_block_bill.dart';
 import 'package:today/ui/home/home_block_weather.dart';
 import 'package:today/ui/home/home_route_mvp.dart';
@@ -35,12 +37,22 @@ class HomeState extends BaseState<HomeRoute> {
   @override
   void initState() {
     super.initState();
+    //监听账单数据的变化
+    _subscribeBillChange();
     //加载页面中应该显示的block
     _loadBlocks();
     //加载实时天气信息
     _loadNowWeather();
     //加载进入消费金额信息
     _loadTodayBillCount();
+  }
+
+  //监听账单数据的变化
+  void _subscribeBillChange() {
+    billEvent.addObserver(EventConstant.EVENT_BILL_CHANGED, (type) {
+      //数据变化之后重新调用数据库查询方法
+      _loadTodayBillCount();
+    });
   }
 
   //加载页面block

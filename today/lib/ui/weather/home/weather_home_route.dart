@@ -25,9 +25,27 @@ class WeatherHomeState extends BaseState<WeatherHomeRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Text("天气首页"),
+      body: PageView(
+        children: [
+          Container(
+            constraints: BoxConstraints.expand(),
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: Text("第一个页面"),
+          ),
+          Container(
+            constraints: BoxConstraints.expand(),
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: Text("第二个页面"),
+          ),
+          Container(
+            constraints: BoxConstraints.expand(),
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: Text("第三个页面"),
+          ),
+        ],
       ),
     );
   }

@@ -6,7 +6,9 @@ import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_event.dart';
 import 'package:today/db/db_helper.dart';
+import 'package:today/event/event_bill.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
 
@@ -309,6 +311,9 @@ class _ContentState extends State<_ContentWidget> {
     if (entity.code != DBConstant.DB_RESULT_SUCCESS) {
       showInfo(entity.msg);
     } else {
+      //调用事件通知机制通知主页添加数据
+      billEvent.subscribe(
+          EventConstant.EVENT_BILL_CHANGED, BillEvent.BILL_CHANGE_ADD);
       //携带当前数据返回到上个页面
       Navigator.pop(context, bean);
     }
@@ -529,29 +534,6 @@ class _TypeWidget extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-//可选择的账单类型
-class _ChooseBillTypeWidget extends StatelessWidget {
-  final BillTypeBean _bean;
-
-  _ChooseBillTypeWidget(this._bean);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        margin: EdgeInsets.only(right: 15.0),
-        padding: EdgeInsets.only(top: 2.0, bottom: 2.0, left: 3.0, right: 3.0),
-        child: Text(_bean.name),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4.0)),
-            shape: BoxShape.rectangle,
-            border: Border.all(color: Colors.grey, width: 3.0)),
       ),
     );
   }
