@@ -38,6 +38,8 @@ dependencies:
   #json转model需要的插件
   json_annotation: ^4.3.0
   json_serializable: ^6.0.1
+  #百度地图定位所需的插件
+  flutter_bmflocation: ^2.0.0-nullsafety.1
   
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'package:flutter_bmflocation/flutter_baidu_location.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
@@ -7,6 +9,9 @@ import 'package:today/net/http_weather_helper.dart';
 import 'package:today/ui/home/home_route.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/constact/constact_string.dart' as cs;
+import 'package:today/utils/location_utils.dart';
+import 'package:today/utils/log_utils.dart';
+import 'package:today/utils/permission_utils.dart';
 
 //presenter
 class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
@@ -17,10 +22,39 @@ class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
   List<HomeBlockBean> getHomeBlocks() => this.model.createHomeBlocks();
 
   //获取当前位置的实时天气信息
-  Future<WeatherNowBean> getNowWeather() => this.model.getNowWeather();
+  void getNowWeather() async{
+    final list = List<Permission>.empty(growable: true);
+    list.add(Permission.location);
+    list.add(Permission.storage);
+
+    if(!await PermissionUtils.checkHavePermissions(list)){
+      //没有权限，请求这两个权限
+      if(!await PermissionUtils.requestPermissions(list)){
+        //没有请求到权限，直接返回空值
+        return;
+      }
+    }
+    //有权限，获取当前的位置信息
+    final locationUtils = BDLocationUtils();
+    locationUtils.getLocation().listen((event) async{
+      if(event != null && !event.containsKey("errorCode")){
+        Logs.ez("定位成功");
+        //结束定位
+        locationUtils.stopLocation();
+        //转换位置信息
+        BaiduLocation location = BaiduLocation.fromMap(event);
+        final weather = await this.model.getNowWeather("${location.longitude},${location.latitude}");
+        //将位置信息设置进去
+        weather.location = location;
+        this.view.loadNowWeatherSuccess(weather);
+      }
+    });
+  }
 
   //获取今天已经消费的数量
   Future<double> getBillCountToday() => this.model.getBillCountToday();
+
+  
 }
 
 //Model
@@ -51,9 +85,10 @@ class HomeRouteModel extends BaseModel<HomeRoutePresenter> {
   }
 
   //获取当前位置的实时天气信息
-  Future<WeatherNowBean> getNowWeather() {
+  //locationInfo可以是经纬度，也可以是位置id，位置id可以从和风天气API处获得
+  Future<WeatherNowBean> getNowWeather(String locationInfo) async {
     var helper = WeatherHttpHelper();
-    return helper.getWeatherNow("108.95,34.272");
+    return await helper.getWeatherNow(locationInfo);
   }
 
   //获取今天已经消费的金额

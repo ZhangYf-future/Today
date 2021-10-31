@@ -1,12 +1,6 @@
 ///字符串常量信息
 class StringConstant {
-  static const String WEATHER_NOW = "实时天气";
-  static const String WEATHER_CLICK_WATCH_DETAILS = "点击查看天气详情>";
-  static const String WEATHER_UNIT = "℃";
 
-  static const String WATCH_MORE = "查看更多>";
-  static const String TODAY_USE = "今日已用";
-  static const HOME_BLOCK_TITLE_BILL = "记录账单信息>";
 
    //首页
   static const String MY_DAY = "我的一天";
@@ -115,4 +109,13 @@ class StringConstant {
   static const String ERROR_BILL_PLAN = "请检查计划信息是否设置";
   //账单类型出错
   static const String ERROR_BILL_TYPE = "请检查账单类型是否选择";
+
+    static const String WEATHER_NOW = "实时天气";
+  static const String WEATHER_CLICK_WATCH_DETAILS = "点击查看天气详情>";
+  static const String WEATHER_UNIT = "℃";
+
+  static const String WATCH_MORE = "查看更多>";
+  static const String TODAY_USE = "今日已用";
+  static const String HOME_BLOCK_TITLE_BILL = "记录账单信息>";
+  static const String INPUT_SEARCH_CITY_NAME = "请输入要搜索的城市名称";
 }

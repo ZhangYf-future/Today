@@ -5,10 +5,10 @@ import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/constact/constact_string.dart' as cs;
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
-
+///首页天气Widget
 class HomeBlockWeatherWidget extends StatelessWidget {
   final HomeBlockBean _homeBlockBean;
-  final WeatherNowRealBean? _weatherBean;
+  final WeatherNowBean? _weatherBean;
 
   HomeBlockWeatherWidget(this._homeBlockBean, this._weatherBean);
 
@@ -68,12 +68,27 @@ class HomeBlockWeatherWidget extends StatelessWidget {
   //有天气信息时候的UI
   Widget _createWeatherWidget() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
+        //右上角显示位置信息
+        (_weatherBean != null && _weatherBean!.location != null)
+            ? Padding(
+                padding: EdgeInsets.only(top: 10.0, right: 10.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(_weatherBean!.location!.district ?? "",
+                    style: TextStyle(
+                      color: Colors.redAccent
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
           child: Text(
             cs.StringConstant.WEATHER_NOW,
             style: TextStyle(
@@ -85,14 +100,14 @@ class HomeBlockWeatherWidget extends StatelessWidget {
         Center(
           child: RichText(
             text: TextSpan(
-              text: "${_weatherBean!.temp}℃",
+              text: "${_weatherBean!.now.temp}℃",
               style: TextStyle(
                   color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
                   fontSize: 26.0,
                   fontWeight: FontWeight.bold),
               children: [
                 TextSpan(
-                    text: " ${_weatherBean!.text}",
+                    text: " ${_weatherBean!.now.text}",
                     style: TextStyle(
                       fontSize: 20.0,
                       color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
@@ -103,7 +118,7 @@ class HomeBlockWeatherWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 10.0, right: 15.0),
+          padding: EdgeInsets.only(top: 20.0, right: 15.0),
           child: Align(
             alignment: Alignment.centerRight,
             child: Text(

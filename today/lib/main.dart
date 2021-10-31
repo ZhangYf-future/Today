@@ -1,4 +1,4 @@
-import 'package:amap_flutter_location/amap_flutter_location.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:today/net/http_dio.dart';
@@ -9,13 +9,14 @@ import 'package:today/ui/bill/bill_home_route.dart';
 import 'package:today/ui/bill/type/type_list_route.dart';
 import 'package:today/ui/home/home_route.dart';
 import 'package:today/ui/splash_route.dart';
+import 'package:today/ui/weather/city_add/city_add_route.dart';
 import 'package:today/ui/weather/home/weather_home_route.dart';
 import 'package:today/utils/constant.dart';
 
 void main() {
-  runApp(MyApp());
   //配置网络信息
   DioUtils.dioConfig();
+  runApp(MyApp());
 }
 
 //弹出toast
@@ -26,10 +27,7 @@ void showInfo(String msg) {
 //APP入口
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  MyApp() {
-    //设置高德地图key
-    AMapFlutterLocation.setApiKey("	ef93cf1114922c52a43920a2eab08923", "");
-  }
+  MyApp() {}
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,6 +52,8 @@ class MyApp extends StatelessWidget {
         RouteNameConstant.BILL_LIST_ROUTE: (context) => BillListRouteWidget(),
         //天气首页
         RouteNameConstant.WEATHER_HOME_ROUTE: (context) => WeatherHomeRoute(),
+        //添加城市页面
+        RouteNameConstant.WEATHER_ADD_CITY_ROUTE: (context) => CityAddWidget(),
       },
       //启动页为闪屏页
       home: SplashRoute(),

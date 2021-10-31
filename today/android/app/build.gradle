@@ -37,13 +37,13 @@ android {
     lintOptions {
         disable 'InvalidPackage'
         checkReleaseBuilds false
-    abortOnError false
+        abortOnError false
     }
 
     defaultConfig {
         applicationId "com.example.today"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -59,9 +59,15 @@ android {
 
     buildTypes {
         release {
-            release {
-                signingConfig signingConfigs.release
-            }
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

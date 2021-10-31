@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:today/utils/constant.dart';
+import 'package:today/constact/constact_dio.dart';
 import 'package:today/utils/log_utils.dart';
 
 ///dio实例
@@ -14,7 +14,7 @@ class DioUtils {
 
     //网络配置信息
     final BaseOptions options = BaseOptions(
-        connectTimeout: 5000,
+        connectTimeout: 30 * 1000,
         receiveTimeout: 30 * 1000,
         sendTimeout: 30 * 1000,
         baseUrl: DioNetConstant.DIO_BASE_URL_WEATHER,
@@ -27,11 +27,20 @@ class DioUtils {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (options, requestHandler) {
       //将和风天气的key添加到请求参数中
-      if (options.queryParameters == null) {
-        options.queryParameters = Map();
-      }
       options.queryParameters["key"] = DioNetConstant.WEATHER_HTTP_KEY;
       return requestHandler.next(options);
+    }));
+
+    //设置日志拦截器
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      //打印信息
+      Logs.ez("request：uri is:${options.uri}");
+      Logs.ez("request: data is:${options.data}");
+      return handler.next(options);
+    }, onResponse: (response, handler) {
+      //打印请求到的数据
+      Logs.ez("response: data is: ${response.data}");
+      return handler.next(response);
     }));
   }
 

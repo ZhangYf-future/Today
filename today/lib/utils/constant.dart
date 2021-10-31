@@ -19,6 +19,8 @@ class RouteNameConstant {
 
   //天气首页
   static const String WEATHER_HOME_ROUTE = "weatherHomeRoute";
+  //添加城市页面
+  static const String WEATHER_ADD_CITY_ROUTE = "weatherAddCityRoute";
 }
 
 ///颜色相关常量
@@ -196,14 +198,4 @@ class HomeBlockConstant {
   static const HOME_BLOCK_TITLE_WEATHER = "查看详细天气 -->";
 }
 
-//网络部分的常量信息
-class DioNetConstant {
-  //和风天气key
-  static const WEATHER_HTTP_KEY = "ec18237abdd64ff6a5227d8ac93e7f18";
 
-  //获取天气的基地址
-  static const DIO_BASE_URL_WEATHER = "https://devapi.qweather.com/v7";
-
-  //获取实时天气的路径
-  static const PATH_GET_WEATHER_NOW = "/weather/now";
-}

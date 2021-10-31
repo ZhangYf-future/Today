@@ -64,7 +64,12 @@ class HomeState extends BaseState<HomeRoute> {
 
   //获取当前实时天气信息
   void _loadNowWeather() async {
-    _weatherNowBean = await _presenter!.getNowWeather();
+    _presenter!.getNowWeather();
+  }
+
+  //实时天气获取完成后的回调
+  void loadNowWeatherSuccess(WeatherNowBean bean){
+    this._weatherNowBean = bean;
     updatePage();
   }
 
@@ -73,6 +78,13 @@ class HomeState extends BaseState<HomeRoute> {
     _todayAmount = await _presenter!.getBillCountToday();
     Logs.ez("今日账单:$_todayAmount");
     updatePage();
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    Logs.ez("dispose...");
   }
 
   @override
@@ -111,7 +123,7 @@ class HomeState extends BaseState<HomeRoute> {
                   //天气
                   case HomeBlockConstant.HOME_BLOCK_TYPE_WEATHER:
                     return HomeBlockWeatherWidget(
-                        this._homeBlockList[position], _weatherNowBean?.now);
+                        this._homeBlockList[position], _weatherNowBean);
                   //默认返回null
                   default:
                     return Spacer();
