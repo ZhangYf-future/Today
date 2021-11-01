@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:today/base/base_view.dart';
+import 'package:today/bean/weather/weather_city_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/ui/weather/city_add/city_add_mvp.dart';
 import 'package:today/utils/constant.dart';
@@ -20,11 +21,20 @@ class CityAddState extends BaseState<CityAddWidget> {
   final TextEditingController _inputCityController = TextEditingController();
   //城市输入框的Node
   final FocusNode _inputCityFocusNode = FocusNode();
+  //请求到的城市信息
+  WeatherCityListBean? _weatherCityList;
   //presenter
   CityAddPresenter? _presenter;
 
-  CityAddState(){
+  //创建presenter
+  CityAddState() {
     _presenter = CityAddPresenter(this);
+  }
+
+  //城市信息请求成功后的回调
+  void requestCityListSuccess(WeatherCityListBean weatherCityListBean) {
+    this._weatherCityList = weatherCityListBean;
+    updatePage();
   }
 
   @override
@@ -70,12 +80,8 @@ class CityAddState extends BaseState<CityAddWidget> {
                           border: InputBorder.none,
                           isCollapsed: true),
                       showCursor: true,
-                      onChanged: (str){
-                        if(StringUtils.isNotEmpty(str)){
-                          //参数不为空，请求数据
-                          _presenter!.queryCityList(str);
-                        }
-                      },
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (input) => _presenter!.queryCityList(input),
                     ),
                   ),
 
@@ -95,16 +101,40 @@ class CityAddState extends BaseState<CityAddWidget> {
                           size: 17,
                         ),
                       ),
-                      onTap: (){
+                      onTap: () {
                         //清空输入框中的数据
                         _inputCityController.text = "";
+                        _weatherCityList = null;
+                        updatePage();
                       },
                     ),
                   ),
-                
-                  //列表
-
                 ],
+              ),
+            ),
+
+            //列表
+            Expanded(
+              flex: 1,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  if (_weatherCityList == null) {
+                    return Container();
+                  }
+                  var list = _weatherCityList!.location;
+                  if (list == null) {
+                    return Container();
+                  }
+                  var entity = list[index];
+                  if (entity == null) {
+                    return Container();
+                  }
+                  return _CityWidget(entity);
+                },
+                itemCount:
+                    _weatherCityList == null || _weatherCityList!.location == null
+                        ? 0
+                        : _weatherCityList!.location!.length,
               ),
             ),
           ],
@@ -117,5 +147,33 @@ class CityAddState extends BaseState<CityAddWidget> {
   void dispose() {
     super.dispose();
     Logs.ez("退出添加城市页面");
+  }
+}
+
+///城市信息widget
+class _CityWidget extends StatelessWidget {
+  final WeatherCityBean _cityBean;
+
+  _CityWidget(this._cityBean);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+        //constraints: BoxConstraints.expand(height: 40.0),
+        child: Row(
+          children: [
+            Expanded(
+              child:
+                  Text("${_cityBean.adm1} ${_cityBean.adm2}市${_cityBean.name}区(县)"),
+            ),
+            Text(_cityBean.country),
+          ],
+        ),
+      ),
+    );
   }
 }

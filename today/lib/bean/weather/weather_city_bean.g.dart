@@ -8,8 +8,10 @@ part of 'weather_city_bean.dart';
 
 WeatherCityListBean _$WeatherCityListBeanFromJson(Map<String, dynamic> json) =>
     WeatherCityListBean(
-      (json['location'] as List<dynamic>)
-          .map((e) => WeatherCityBean.fromJson(e as Map<String, dynamic>))
+      (json['location'] as List<dynamic>?)
+          ?.map((e) => e == null
+              ? null
+              : WeatherCityBean.fromJson(e as Map<String, dynamic>))
           .toList(),
     )
       ..code = json['code'] as String?

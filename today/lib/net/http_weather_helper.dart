@@ -30,7 +30,7 @@ class WeatherHttpHelper {
     queryParams["number"] = 20;
     Response result = await DioUtils.getResponse(
         DioNetConstant.PATH_GET_SEARCH_CITY_LIST, queryParams);
-    if (result.statusCode == 200) {
+    if (result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE) {
       return WeatherCityListBean.fromJson(result.data);
     } else {
       return null;

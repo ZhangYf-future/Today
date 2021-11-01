@@ -1,7 +1,5 @@
 ///字符串常量信息
 class StringConstant {
-
-
    //首页
   static const String MY_DAY = "我的一天";
 
@@ -118,4 +116,5 @@ class StringConstant {
   static const String TODAY_USE = "今日已用";
   static const String HOME_BLOCK_TITLE_BILL = "记录账单信息>";
   static const String INPUT_SEARCH_CITY_NAME = "请输入要搜索的城市名称";
+  static const String REQUEST_DATA_ERROR = "数据请求出错，请稍后重试";
 }
