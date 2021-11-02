@@ -117,4 +117,6 @@ class StringConstant {
   static const String HOME_BLOCK_TITLE_BILL = "记录账单信息>";
   static const String INPUT_SEARCH_CITY_NAME = "请输入要搜索的城市名称";
   static const String REQUEST_DATA_ERROR = "数据请求出错，请稍后重试";
+  static const String INSERT_DATA_ERROR = "插入城市信息失败，请稍后重试";
+  static const String SAVE_CITY_SUCCESS = "城市信息已保存";
 }

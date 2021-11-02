@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:sqflite/sqflite.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart';
@@ -61,9 +59,9 @@ class DBUtils {
           //当前处于第一个版本,
           _updateDB2(database);
           break;
-        case DBConstant.DB_SECOND_VERSION:
-          //当前处于第二个版本
-          _updateDB3(database);
+        case DBConstant.DB_THREE_VERSION:
+          //当前处于第三个版本，需要创建天气城市表
+          _updateDB4(database);
           break;
       }
     }
@@ -74,9 +72,10 @@ class DBUtils {
     await database.execute(DBConstant.UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT);
   }
 
-  //更新数据库到第三个版本，添加天气城市信息
-  void _updateDB3(Database database) async {
-    await database.execute(DBConstant.CREATE_WEATHER_CITY_TABLE);
+
+  //更新数据库到第四个版本，添加天气城市数据表
+  void _updateDB4(Database database) async{
+    await database.execute(DBConstant.CREATE_TABLE_WEATHER_CITY);
   }
 
   //创建账单计划数据表
@@ -231,5 +230,10 @@ class DBUtils {
       columns: columnNameList,
       where: where,
     );
+  }
+
+  ///向天气城市表中添加一条数据
+  Future<int> insertWeatherCity(Map<String,dynamic> map) async{
+      return await database.insert(DBConstant.TABLE_WEATHER_CITY, map);
   }
 }

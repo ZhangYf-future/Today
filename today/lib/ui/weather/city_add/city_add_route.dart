@@ -129,7 +129,10 @@ class CityAddState extends BaseState<CityAddWidget> {
                   if (entity == null) {
                     return Container();
                   }
-                  return _CityWidget(entity);
+                  return GestureDetector(
+                    child: _CityWidget(entity),
+                    onTap: () => this._presenter!.insertCityBean(entity),
+                  ); 
                 },
                 itemCount:
                     _weatherCityList == null || _weatherCityList!.location == null

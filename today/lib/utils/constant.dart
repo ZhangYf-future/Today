@@ -50,14 +50,17 @@ class DBConstant {
   //数据库名称
   static const String DB_NAME = "toDayManage.db";
   //数据库版本号
-  static const int DB_VERSION = DB_THREE_VERSION;
+  static const int DB_VERSION = DB_FOUR_VERSION;
 
   //数据库第一个版本
   static const int DB_FIRST_VERSION = 1;
   //数据库第二个版本，添加账单类型表的weight字段
   static const int DB_SECOND_VERSION = 2;
-  //数据库第三个版本，添加天气啊城市信息数据表
+  //数据库第三个版本,不会执行任何操作
   static const int DB_THREE_VERSION = 3;
+  //数据库第四个版本，添加天气城市数据表,第三个版本的数据表有问题
+  static const int DB_FOUR_VERSION = 4;
+
 
   //账单管理部分
   //账单表名称
@@ -109,19 +112,6 @@ class DBConstant {
   //创建时间
   static const String BILL_PLAN_CREATE_TIME = "createTime";
 
-  //天气信息部分,已添加的城市信息列表
-  //城市信息表名
-  static const String WEATHER_CITY_TABLE_NAME = "tableWeatherCity";
-  //id
-  static const String WEATHER_CITY_ID = "id";
-  //城市名称
-  static const String WEATHER_CITY_NAME = "name";
-  //城市纬度
-  static const String WEATHER_CITY_LATITUDE = "latitude";
-  //城市经度
-  static const String WEATHER_CITY_LOGITUDE = "longitude";
-  //当前城市在和风天气中的id，需要根据这个id信息去请求对应的天气情况
-  static const String WEATHER_CITY_ID_IN_HF = "id_hf";
 
   //创建账单数据表
   static const String CREATE_BILL_TABLE = """
@@ -158,16 +148,6 @@ class DBConstant {
       );
     """;
 
-  //创建天气城市信息表
-  static const String CREATE_WEATHER_CITY_TABLE = """
-      CREATE TABLE IF NOT EXISTS $WEATHER_CITY_TABLE_NAME(
-        $WEATHER_CITY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        $WEATHER_CITY_NAME TEXT,
-        $WEATHER_CITY_LATITUDE TEXT,
-        $WEATHER_CITY_LOGITUDE TEXT,
-        $WEATHER_CITY_ID_IN_HF TEXT
-      );
-    """;
 
   //获取账单表中的最后10条数据
   static const String GET_BILL_LAST_TEN_ROW = """
@@ -182,6 +162,27 @@ class DBConstant {
   //如果用户是更新数据库，则执行此方法更新数据库
   static const String UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT = """
     ALTER TABLE $BILL_TYPE_TABLE_NAME ADD COLUMN $BILL_TYPE_WEIGHT INTEGER;
+  """;
+
+
+  ///保存用户选择的城市信息的数据表,获取天气信息的时候需要保存用户选择的城市信息
+  static const String TABLE_WEATHER_CITY = "WeatherCityTable";
+  static const String TABLE_WEATHER_CITY_ID = "id";
+  static const String TABLE_WEATHER_CITY_HF_ID = "hfId";//保存请求到的和风天气API中的id信息，后面通过这个id去请求天气信息
+  static const String TABLE_WEATHER_CITY_ADDRESS = "address";//保存具体的地址信息，中国-陕西省-西安市-长安区
+  static const String TABLE_WEATHER_CITY_NAME = "city";//保存城市名，如西安市
+  static const String TABLE_WEATHER_CITY_REGION = "region";//保存区或者县的名称，如长安区
+
+  ///创建天气城市表
+  static const String CREATE_TABLE_WEATHER_CITY = """
+    CREATE TABLE IF NOT EXISTS $TABLE_WEATHER_CITY(
+      $TABLE_WEATHER_CITY_ID INTEGER PRIMARY KEY,
+      $TABLE_WEATHER_CITY_HF_ID TEXT NOT NULL,
+      $TABLE_WEATHER_CITY_NAME TEXT NOT NULL,
+      $TABLE_WEATHER_CITY_REGION TEXT NOT NULL,
+      $TABLE_WEATHER_CITY_ADDRESS TEXT NOT NULL,
+      unique($TABLE_WEATHER_CITY_HF_ID)
+    );
   """;
 }
 

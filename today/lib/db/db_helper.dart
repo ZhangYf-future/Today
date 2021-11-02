@@ -2,11 +2,12 @@ import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
+import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_utils.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart';
-import 'package:today/utils/string_utils.dart';
+import 'package:today/utils/log_utils.dart';
 
 ///数据库中间类
 
@@ -253,5 +254,22 @@ class DBHelper {
       });
     });
     return amount;
+  }
+
+  ///向天气城市数据表中加入一条数据
+  Future<DBResultEntity> insertWeatherCity(WeatherCityDBBean bean) async{
+    final result = DBResultEntity();
+    try{
+      int id = await _dbUtils.insertWeatherCity(bean.toMap());
+      Logs.ez("insertWeatherCity: success:$id");
+      if(id == -1){
+        result.code = DBConstant.DB_RESULT_FAILED;
+      }
+      result.result = id;
+    }catch(e){
+      Logs.ez("insertWeatherCity:$e");
+        result.code = DBConstant.DB_RESULT_FAILED;
+    }
+    return result;
   }
 }
