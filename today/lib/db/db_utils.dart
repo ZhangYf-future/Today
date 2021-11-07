@@ -72,9 +72,8 @@ class DBUtils {
     await database.execute(DBConstant.UPDATE_BILL_TYPE_TABLE_ADD_WEIGHT);
   }
 
-
   //更新数据库到第四个版本，添加天气城市数据表
-  void _updateDB4(Database database) async{
+  void _updateDB4(Database database) async {
     await database.execute(DBConstant.CREATE_TABLE_WEATHER_CITY);
   }
 
@@ -233,15 +232,22 @@ class DBUtils {
   }
 
   ///向天气城市表中添加一条数据
-  Future<int> insertWeatherCity(Map<String,dynamic> map) async{
-      return await database.insert(DBConstant.TABLE_WEATHER_CITY, map);
+  Future<int> insertWeatherCity(Map<String, dynamic> map) async {
+    return await database.insert(DBConstant.TABLE_WEATHER_CITY, map);
   }
 
   //根据和风天气id从数据库中查询是否已经存在当前数据
-  Future<List<Map<String,dynamic>>> queryWeatherCityExists(String hfId) async{
+  Future<List<Map<String, dynamic>>> queryWeatherCityExists(String hfId) async {
     //查询条件
-    var whereArgs = List<String>.empty(growable: true);
+    var whereArgs = <String>[];
     whereArgs.add(hfId);
-    return await database.query(DBConstant.TABLE_WEATHER_CITY,where: DBConstant.TABLE_WEATHER_CITY_HF_ID,whereArgs: whereArgs);
+    return await database.query(DBConstant.TABLE_WEATHER_CITY,
+        where: "${DBConstant.TABLE_WEATHER_CITY_HF_ID} = ?",
+        whereArgs: whereArgs);
+  }
+
+  //从数据库中查询出全部的城市信息
+  Future<List<Map<String,dynamic>>> queryAllWeatherCityList() async{
+    return await database.query(DBConstant.TABLE_WEATHER_CITY);
   }
 }

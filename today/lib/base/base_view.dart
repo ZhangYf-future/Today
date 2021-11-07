@@ -16,6 +16,9 @@ abstract class BaseView {
 
 abstract class BaseState<W extends StatefulWidget> extends State<W>
     implements BaseView {
+
+
+  
   //更新当前页面
   @override
   void updatePage() {

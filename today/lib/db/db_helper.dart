@@ -281,4 +281,18 @@ class DBHelper {
     }
     return result;
   }
+
+  //请求全部城市信息列表
+  Future<List<WeatherCityDBBean>> getAllWeatherCityList() async{
+
+    final mapList = await _dbUtils.queryAllWeatherCityList();
+
+    final cityList = <WeatherCityDBBean>[];
+
+    mapList.forEach((element) { 
+      cityList.add(WeatherCityDBBean.fromMap(element));
+    });
+
+    return cityList;
+  }
 }

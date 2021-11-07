@@ -1,11 +1,7 @@
-
 import 'dart:async';
-
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
-import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,13 +41,20 @@ class AMapLocationUtils {
   }
 }
 
-
 ///百度地图定位
-class BDLocationUtils{
-  //执行定位
+class BDLocationUtils {
+  //单例
+  static BDLocationUtils _instance = BDLocationUtils._internal();
+
+  BDLocationUtils._internal();
+
+  factory BDLocationUtils() => _instance;
+
+  //执行定位的插件
   final LocationFlutterPlugin _plugin = LocationFlutterPlugin();
 
-  BDLocationUtils(){
+  //配置信息
+  void _setUpLocation() {
     /// android 端设置定位参数
     BaiduLocationAndroidOption androidOption = new BaiduLocationAndroidOption();
     androidOption.setCoorType("bd09ll"); // 设置返回的位置坐标系类型
@@ -62,17 +65,18 @@ class BDLocationUtils{
     androidOption.setIsNeedLocationDescribe(true); // 设置是否需要返回位置描述
     androidOption.setOpenGps(true); // 设置是否需要使用gps
     androidOption.setLocationMode(LocationMode.Hight_Accuracy); // 设置定位模式
-    androidOption.setScanspan(1000); // 设置发起定位请求时间间隔
+    androidOption.setScanspan(0); // 设置发起定位请求时间间隔,设置为0表示只执行一次定位
 
     Map androidMap = androidOption.getMap();
 
     /// ios 端设置定位参数
     BaiduLocationIOSOption iosOption = new BaiduLocationIOSOption();
     iosOption.setIsNeedNewVersionRgc(true); // 设置是否需要返回最新版本rgc信息
-    iosOption.setBMKLocationCoordinateType("BMKLocationCoordinateTypeBMK09LL"); // 设置返回的位置坐标系类型
+    iosOption.setBMKLocationCoordinateType(
+        "BMKLocationCoordinateTypeBMK09LL"); // 设置返回的位置坐标系类型
     iosOption.setActivityType("CLActivityTypeAutomotiveNavigation"); // 设置应用位置类型
     iosOption.setLocationTimeout(10); // 设置位置获取超时时间
-    iosOption.setDesiredAccuracy("kCLLocationAccuracyBest");  // 设置预期精度参数
+    iosOption.setDesiredAccuracy("kCLLocationAccuracyBest"); // 设置预期精度参数
     iosOption.setReGeocodeTimeout(10); // 设置获取地址信息超时时间
     iosOption.setDistanceFilter(100); // 设置定位最小更新距离
     iosOption.setAllowsBackgroundLocationUpdates(true); // 是否允许后台定位
@@ -84,15 +88,14 @@ class BDLocationUtils{
   }
 
   //获取位置信息
-  Stream<Map<String, Object>?> getLocation(){
-    var listener =  _plugin.onResultCallback();
+  void getLocation(void Function(Map<String, Object>?)? callback) {
+    _plugin.onResultCallback().listen(callback);
+    _setUpLocation();
     _plugin.startLocation();
-    return listener;
   }
 
   //停止定位
-  void stopLocation(){
+  void stopLocation() {
     _plugin.stopLocation();
   }
-
 }

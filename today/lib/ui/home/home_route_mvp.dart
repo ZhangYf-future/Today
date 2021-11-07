@@ -17,33 +17,35 @@ import 'package:today/utils/permission_utils.dart';
 class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
   HomeRoutePresenter(HomeState view) : super(HomeRouteModel(), view);
 
-
   //获取首页列表数据
   List<HomeBlockBean> getHomeBlocks() => this.model.createHomeBlocks();
 
   //获取当前位置的实时天气信息
-  void getNowWeather() async{
+  void getNowWeather() async {
     final list = List<Permission>.empty(growable: true);
     list.add(Permission.location);
     list.add(Permission.storage);
 
-    if(!await PermissionUtils.checkHavePermissions(list)){
+    if (!await PermissionUtils.checkHavePermissions(list)) {
       //没有权限，请求这两个权限
-      if(!await PermissionUtils.requestPermissions(list)){
+      if (!await PermissionUtils.requestPermissions(list)) {
         //没有请求到权限，直接返回空值
         return;
       }
     }
     //有权限，获取当前的位置信息
     final locationUtils = BDLocationUtils();
-    locationUtils.getLocation().listen((event) async{
-      if(event != null && !event.containsKey("errorCode")){
+    Logs.ez("location utils is:${locationUtils.runtimeType}");
+    locationUtils.getLocation((event) async {
+      if (event != null && !event.containsKey("errorCode")) {
         Logs.ez("定位成功");
         //结束定位
         locationUtils.stopLocation();
         //转换位置信息
         BaiduLocation location = BaiduLocation.fromMap(event);
-        final weather = await this.model.getNowWeather("${location.longitude},${location.latitude}");
+        final weather = await this
+            .model
+            .getNowWeather("${location.longitude},${location.latitude}");
         //将位置信息设置进去
         weather.location = location;
         this.view.loadNowWeatherSuccess(weather);
@@ -53,8 +55,6 @@ class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
 
   //获取今天已经消费的数量
   Future<double> getBillCountToday() => this.model.getBillCountToday();
-
-  
 }
 
 //Model
