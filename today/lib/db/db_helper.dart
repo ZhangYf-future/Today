@@ -260,6 +260,15 @@ class DBHelper {
   Future<DBResultEntity> insertWeatherCity(WeatherCityDBBean bean) async{
     final result = DBResultEntity();
     try{
+      //查询是否已经有同样的数据了
+      var checkRepeatData = await _dbUtils.queryWeatherCityExists(bean.hfId);
+      if(checkRepeatData.isNotEmpty){
+        //数据重复，不需要插入数据
+        result.code = DBConstant.DB_RESULT_FAILED;
+        result.result = bean;
+        return result;
+      }
+
       int id = await _dbUtils.insertWeatherCity(bean.toMap());
       Logs.ez("insertWeatherCity: success:$id");
       if(id == -1){

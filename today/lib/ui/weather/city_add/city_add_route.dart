@@ -19,8 +19,6 @@ class CityAddWidget extends StatefulWidget {
 class CityAddState extends BaseState<CityAddWidget> {
   //城市输入框的controller
   final TextEditingController _inputCityController = TextEditingController();
-  //城市输入框的Node
-  final FocusNode _inputCityFocusNode = FocusNode();
   //请求到的城市信息
   WeatherCityListBean? _weatherCityList;
   //presenter
@@ -54,7 +52,7 @@ class CityAddState extends BaseState<CityAddWidget> {
           children: [
             //输入要添加的城市的数据框
             Container(
-              constraints: BoxConstraints.expand(height: 35.0),
+              constraints: BoxConstraints.expand(height: 45.0),
               alignment: Alignment.center,
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
@@ -67,22 +65,20 @@ class CityAddState extends BaseState<CityAddWidget> {
                 fit: StackFit.expand,
                 children: [
                   //输入框
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextField(
-                      controller: _inputCityController,
-                      maxLines: 1,
-                      style: TextStyle(fontSize: 12.0),
-                      decoration: InputDecoration(
-                          hintText: StringConstant.INPUT_SEARCH_CITY_NAME,
-                          contentPadding: EdgeInsets.only(
-                              left: 10.0, right: 10.0, top: 0, bottom: 0),
-                          border: InputBorder.none,
-                          isCollapsed: true),
-                      showCursor: true,
-                      textInputAction: TextInputAction.search,
-                      onSubmitted: (input) => _presenter!.queryCityList(input),
-                    ),
+                  TextField(
+                    controller: _inputCityController,
+                    maxLines: 1,
+                    style: TextStyle(fontSize: 14.0),
+                    decoration: InputDecoration(
+                        filled: true,
+                        hintText: StringConstant.INPUT_SEARCH_CITY_NAME,
+                        contentPadding: EdgeInsets.only(
+                            left: 10.0, right: 10.0, top: 0, bottom: 0),
+                        border: InputBorder.none,
+                        isCollapsed: false),
+                    showCursor: true,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (input) => _presenter!.queryCityList(input),
                   ),
 
                   //清除输入内容的按钮
@@ -105,6 +101,7 @@ class CityAddState extends BaseState<CityAddWidget> {
                         //清空输入框中的数据
                         _inputCityController.text = "";
                         _weatherCityList = null;
+                        _presenter!.clearOldName();
                         updatePage();
                       },
                     ),
@@ -132,12 +129,12 @@ class CityAddState extends BaseState<CityAddWidget> {
                   return GestureDetector(
                     child: _CityWidget(entity),
                     onTap: () => this._presenter!.insertCityBean(entity),
-                  ); 
+                  );
                 },
-                itemCount:
-                    _weatherCityList == null || _weatherCityList!.location == null
-                        ? 0
-                        : _weatherCityList!.location!.length,
+                itemCount: _weatherCityList == null ||
+                        _weatherCityList!.location == null
+                    ? 0
+                    : _weatherCityList!.location!.length,
               ),
             ),
           ],
@@ -170,8 +167,8 @@ class _CityWidget extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child:
-                  Text("${_cityBean.adm1} ${_cityBean.adm2}市${_cityBean.name}区(县)"),
+              child: Text(
+                  "${_cityBean.adm1} ${_cityBean.adm2}市${_cityBean.name}区(县)"),
             ),
             Text(_cityBean.country),
           ],

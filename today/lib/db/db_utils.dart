@@ -236,4 +236,12 @@ class DBUtils {
   Future<int> insertWeatherCity(Map<String,dynamic> map) async{
       return await database.insert(DBConstant.TABLE_WEATHER_CITY, map);
   }
+
+  //根据和风天气id从数据库中查询是否已经存在当前数据
+  Future<List<Map<String,dynamic>>> queryWeatherCityExists(String hfId) async{
+    //查询条件
+    var whereArgs = List<String>.empty(growable: true);
+    whereArgs.add(hfId);
+    return await database.query(DBConstant.TABLE_WEATHER_CITY,where: DBConstant.TABLE_WEATHER_CITY_HF_ID,whereArgs: whereArgs);
+  }
 }
