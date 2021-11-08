@@ -41,10 +41,10 @@ class WeatherCityDBBean {
   ///从百度地图定位中生成当前类的对象
   factory WeatherCityDBBean.fromBDLocation(BaiduLocation location) {
     WeatherCityDBBean bean = WeatherCityDBBean(
-        "${location.latitude},${location.longitude}",
+        "${location.longitude},${location.latitude}",
         "${location.country}${location.province}${location.city}${location.address}",
-        location.province ?? "",
-        location.address ?? "");
+        location.city ?? "",
+        location.district ?? "");
     bean.isLocation = true;
     return bean;
   }

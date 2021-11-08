@@ -8,9 +8,11 @@ part of 'weather_now_bean.dart';
 
 WeatherNowBean _$WeatherNowBeanFromJson(Map<String, dynamic> json) =>
     WeatherNowBean(
-      json['updateTime'] as String,
-      json['fxLink'] as String,
-      WeatherNowRealBean.fromJson(json['now'] as Map<String, dynamic>),
+      json['updateTime'] as String?,
+      json['fxLink'] as String?,
+      json['now'] == null
+          ? null
+          : WeatherNowRealBean.fromJson(json['now'] as Map<String, dynamic>),
     )
       ..code = json['code'] as String?
       ..message = json['message'] as String?;

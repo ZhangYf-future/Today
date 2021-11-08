@@ -60,4 +60,11 @@ class DateUtils {
     Logs.ez("today start time is ${todayEnd.millisecondsSinceEpoch}");
     return todayEnd.millisecondsSinceEpoch;
   }
+
+  //判断指定的时间距离现在是否大于20分钟
+  static bool checkMoreThan20Minutes(int time){
+    final now = DateTime.now();
+    final nowInt = now.millisecondsSinceEpoch;
+    return nowInt - time > 20 * 60 * 1000;
+  }
 }

@@ -5,6 +5,7 @@ import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/constact/constact_string.dart' as cs;
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
+
 ///首页天气Widget
 class HomeBlockWeatherWidget extends StatelessWidget {
   final HomeBlockBean _homeBlockBean;
@@ -28,7 +29,7 @@ class HomeBlockWeatherWidget extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [Colors.blueAccent, Colors.redAccent])),
-            child: _weatherBean == null
+            child: _weatherBean == null || _weatherBean!.now == null
                 ? _createNoWeatherWidget()
                 : _createWeatherWidget()),
         onTap: () => JumpUtils.toNextRouteWithName(
@@ -78,10 +79,9 @@ class HomeBlockWeatherWidget extends StatelessWidget {
                 padding: EdgeInsets.only(top: 10.0, right: 10.0),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text(_weatherBean!.location!.district ?? "",
-                    style: TextStyle(
-                      color: Colors.redAccent
-                    ),
+                  child: Text(
+                    _weatherBean!.location!.district ?? "",
+                    style: TextStyle(color: Colors.redAccent),
                   ),
                 ),
               )
@@ -100,14 +100,14 @@ class HomeBlockWeatherWidget extends StatelessWidget {
         Center(
           child: RichText(
             text: TextSpan(
-              text: "${_weatherBean!.now.temp}℃",
+              text: "${_weatherBean!.now!.temp}℃",
               style: TextStyle(
                   color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
                   fontSize: 26.0,
                   fontWeight: FontWeight.bold),
               children: [
                 TextSpan(
-                    text: " ${_weatherBean!.now.text}",
+                    text: " ${_weatherBean!.now!.text}",
                     style: TextStyle(
                       fontSize: 20.0,
                       color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,

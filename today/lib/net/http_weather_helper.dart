@@ -4,9 +4,13 @@ import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/constact/constact_dio.dart';
 import 'package:today/net/http_dio.dart';
 
-var weatherHelper = WeatherHttpHelper();
+var weatherHelper = WeatherHttpHelper._internal();
 
 class WeatherHttpHelper {
+
+  //私有化构造函数
+  WeatherHttpHelper._internal();
+
   //获取实时天气
   Future<WeatherNowBean> getWeatherNow(String location) async {
     //设置基地址

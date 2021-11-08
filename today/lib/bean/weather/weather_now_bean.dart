@@ -6,14 +6,14 @@ part 'weather_now_bean.g.dart';
 ///实时天气信息的数据类
 @JsonSerializable()
 class WeatherNowBean extends BaseHttpBean {
-  //更新时间
-  String updateTime;
+  //更新时间,可能为空
+  String? updateTime;
 
-  //响应式页面，可以在web中打开的链接
-  String fxLink;
+  //响应式页面，可以在web中打开的链接,可能为空
+  String? fxLink;
 
-  //当前详细信息的数据
-  WeatherNowRealBean now;
+  //当前详细信息的数据,可能为空
+  WeatherNowRealBean? now;
 
   //当前的位置信息，可能为空
   @JsonKey(ignore: true)

@@ -3,8 +3,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
+import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/db/db_helper.dart';
-import 'package:today/db/db_utils.dart';
+import 'package:today/net/http_weather_helper.dart';
 import 'package:today/ui/weather/home/weather_home_route.dart';
 import 'package:today/utils/location_utils.dart';
 import 'package:today/utils/log_utils.dart';
@@ -31,6 +32,7 @@ class WeatherHomePresenter
       if (!await PermissionUtils.requestPermissions(permissionList)) {
         //没有请求到权限信息，直接退出
         Logs.ez("没有请求到权限");
+        this.view.getLocationFailed();
         return;
       }
     }
@@ -41,13 +43,17 @@ class WeatherHomePresenter
   //请求城市信息
   void _getLocation() {
     BDLocationUtils utils = BDLocationUtils();
-    Logs.ez("开始获取位置信息:${utils.runtimeType}");
     utils.getLocation((data) {
-      Logs.ez("获取位置信息完成:$data");
       utils.stopLocation();
-      var location = BaiduLocation.fromMap(data);
-      var bean = WeatherCityDBBean.fromBDLocation(location);
-      this.view.getLocationSuccess(bean);
+      if (data != null && !data.containsKey("errorCode")) {
+        //定位成功
+        var location = BaiduLocation.fromMap(data);
+        var bean = WeatherCityDBBean.fromBDLocation(location);
+        this.view.getLocationSuccess(bean);
+      } else {
+        //定位失败
+        this.view.getLocationFailed();
+      }
     });
   }
 

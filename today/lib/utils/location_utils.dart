@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';

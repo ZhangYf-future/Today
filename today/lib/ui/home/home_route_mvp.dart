@@ -87,8 +87,7 @@ class HomeRouteModel extends BaseModel<HomeRoutePresenter> {
   //获取当前位置的实时天气信息
   //locationInfo可以是经纬度，也可以是位置id，位置id可以从和风天气API处获得
   Future<WeatherNowBean> getNowWeather(String locationInfo) async {
-    var helper = WeatherHttpHelper();
-    return await helper.getWeatherNow(locationInfo);
+    return await weatherHelper.getWeatherNow(locationInfo);
   }
 
   //获取今天已经消费的金额

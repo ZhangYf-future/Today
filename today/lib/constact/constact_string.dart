@@ -120,4 +120,5 @@ class StringConstant {
   static const String INSERT_DATA_ERROR = "插入城市信息失败，请稍后重试";
   static const String SAVE_CITY_SUCCESS = "城市信息已保存";
   static const String CURRENT_CITY_ADDED = "当前城市已存在，请查看";
+  static const String DO_NOT_ALWAYS_REQUEST = "请不要重复发起请求";
 }
