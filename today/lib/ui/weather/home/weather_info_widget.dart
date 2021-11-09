@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/ui/weather/home/weather_info_mvp.dart';
+import 'package:today/utils/constant.dart';
 
 ///页面UI
 class WeatherInfoWidget extends StatefulWidget {
@@ -88,7 +90,13 @@ class _WeatherNowWidget extends StatelessWidget {
               alignment: Alignment.center,
               child: Padding(
                 padding: EdgeInsetsDirectional.all(20.0),
-                child: Text(_cityDBBean.name + _cityDBBean.region),
+                child: Text(
+                  _cityDBBean.name + " · " + _cityDBBean.region,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                  ),
+                ),
               ),
             ),
 
@@ -103,6 +111,72 @@ class _WeatherNowWidget extends StatelessWidget {
   //请求到的实时天气不为空的时候的widget
   Widget _createWeatherWidget(WeatherNowRealBean bean) => Column(
         mainAxisSize: MainAxisSize.min,
-        children: [Text("${bean.temp}℃ / ${bean.feelsLike}℃")],
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Text.rich(
+              TextSpan(
+                  text: bean.text,
+                  style: TextStyle(
+                      color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                      fontSize: 28.0),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: " · " + bean.temp + "℃",
+                      style: TextStyle(
+                          color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                          fontSize: 28.0),
+                    ),
+                  ]),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                //风力信息，显示风向和风速
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      bean.windDir + " · " + bean.windSpeed + "km/h",
+                      style: TextStyle(
+                        color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+
+                //湿度信息
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      StringConstant.HUMIDITY_INFO + ": " + bean.humidity + "%",
+                      style: TextStyle(
+                          color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                          fontSize: 16.0),
+                    ),
+                  ),
+                ),
+
+                //体感温度
+                Expanded(
+                    child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    StringConstant.FEELS_LIKE + ": " + bean.feelsLike + "℃",
+                    style: TextStyle(
+                      color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                )),
+              ],
+            ),
+          ),
+        ],
       );
 }

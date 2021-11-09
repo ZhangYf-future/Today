@@ -91,7 +91,7 @@ class WeatherHomeState extends BaseState<WeatherHomeRoute> {
           //页面底部是当前的指示器
         ],
       ),
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: ColorConstant.COLOR_THEME_BACKGROUND,
       floatingActionButton: GestureDetector(
         child: Container(
           constraints: BoxConstraints.expand(width: 50.0, height: 50.0),
