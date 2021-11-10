@@ -1,5 +1,6 @@
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
+import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/net/http_weather_helper.dart';
@@ -16,7 +17,7 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
   
   WeatherInfoPresenter(WeatherInfoState view) : super(WeatherInfoModel(), view);
 
-    //根据城市信息请求当前城市的实时天气
+  //根据城市信息请求当前城市的实时天气
   void getWeatherNowInfo(String cityInfo) async{
       //如果这次的城市信息和上次的城市信息一样，并且时间小于20分钟，则不会发起请求。
       if(cityInfo == _oldCityInfo && !DateUtils.checkMoreThan20Minutes(_oldRequestTime)){
@@ -30,11 +31,23 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
       if(checkHttpResult(result,result?.now)){
         //数据请求成功,回调到页面中设置数据
         this.view.requestWeatherNowSuccess(result!);
+
+        //接着请求逐小时天气信息
+        getWeatherHourInfo(cityInfo);
       }else{
         //数据请求失败
         _oldCityInfo = null;
         _oldRequestTime = 0;
       }
+  }
+
+  //请求逐小时天气信息
+  void getWeatherHourInfo(String cityInfo) async{
+    final WeatherHourBean? result = await this.model.getWeatherHourInfo(cityInfo);
+    if(checkHttpResult(result, result?.hourly)){
+      //数据请求成功
+      this.view.requestWeatherHourSuccess(result!);
+    }
   }
 
 }
@@ -46,4 +59,7 @@ class WeatherInfoModel extends BaseModel<WeatherInfoPresenter>{
   Future<WeatherNowBean> getWeatherInfo(String cityInfo) {
     return weatherHelper.getWeatherNow(cityInfo);
   }
+
+  //请求逐小时天气信息
+  Future<WeatherHourBean?> getWeatherHourInfo(String cityInfo) => weatherHelper.getWeatherHour(cityInfo); 
 }

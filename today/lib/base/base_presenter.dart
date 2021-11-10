@@ -14,7 +14,7 @@ abstract class BasePresenter<M extends BaseModel, V extends BaseView> {
   }
 
   //对请求到的数据进行统一的处理
-  bool checkHttpResult(final BaseHttpBean? result,Object? data,{bool showToast = true,bool checkData = true}){
+  bool checkHttpResult(final BaseHttpBean? result,final Object? data,{bool showToast = true,bool checkData = true}){
 
       if(result == null || (checkData && data == null)){
         //数据请求出错

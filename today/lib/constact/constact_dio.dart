@@ -15,4 +15,9 @@ class DioNetConstant {
   static const PATH_GET_WEATHER_NOW = "/v7/weather/now";
   //请求搜索天气列表的路径
   static const PATH_GET_SEARCH_CITY_LIST = "/v2/city/lookup";
+  //逐小时天气请求路径
+  static const PATH_GET_WEATHER_HOUR = "/v7/weather/24h";
+
+  //location
+  static const REQUEST_WEATHER_LOCATION = "location";
 }

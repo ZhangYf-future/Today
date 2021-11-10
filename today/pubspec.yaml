@@ -40,6 +40,7 @@ dependencies:
   json_serializable: ^6.0.1
   #百度地图定位所需的插件
   flutter_bmflocation: ^2.0.0-nullsafety.1
+  flutter_svg: ^0.23.0+1
   
 dev_dependencies:
   flutter_test:
@@ -56,9 +57,140 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - images/100.svg
+    - images/101.svg
+    - images/102.svg
+    - images/103.svg
+    - images/104.svg
+    - images/150.svg
+    - images/151.svg
+    - images/152.svg
+    - images/153.svg
+    - images/300.svg
+    - images/301.svg
+    - images/302.svg
+    - images/303.svg
+    - images/304.svg
+    - images/305.svg
+    - images/306.svg
+    - images/307.svg
+    - images/308.svg
+    - images/309.svg
+    - images/310.svg
+    - images/311.svg
+    - images/312.svg
+    - images/313.svg
+    - images/314.svg
+    - images/315.svg
+    - images/316.svg
+    - images/317.svg
+    - images/318.svg
+    - images/350.svg
+    - images/351.svg
+    - images/399.svg
+    - images/400.svg
+    - images/401.svg
+    - images/402.svg
+    - images/403.svg
+    - images/404.svg
+    - images/405.svg
+    - images/406.svg
+    - images/407.svg
+    - images/408.svg
+    - images/409.svg
+    - images/410.svg
+    - images/456.svg
+    - images/457.svg
+    - images/499.svg
+    - images/500.svg
+    - images/501.svg
+    - images/502.svg
+    - images/503.svg
+    - images/504.svg
+    - images/507.svg
+    - images/508.svg
+    - images/509.svg
+    - images/510.svg
+    - images/511.svg
+    - images/512.svg
+    - images/513.svg
+    - images/514.svg
+    - images/515.svg
+    - images/800.svg
+    - images/801.svg
+    - images/802.svg
+    - images/803.svg
+    - images/804.svg
+    - images/805.svg
+    - images/806.svg
+    - images/807.svg
+    - images/900.svg
+    - images/901.svg
+    - images/999.svg
+    - images/100-fill.svg
+    - images/101-fill.svg
+    - images/102-fill.svg
+    - images/103-fill.svg
+    - images/104-fill.svg
+    - images/150-fill.svg
+    - images/151-fill.svg
+    - images/152-fill.svg
+    - images/153-fill.svg
+    - images/300-fill.svg
+    - images/301-fill.svg
+    - images/302-fill.svg
+    - images/303-fill.svg
+    - images/304-fill.svg
+    - images/305-fill.svg
+    - images/306-fill.svg
+    - images/307-fill.svg
+    - images/308-fill.svg
+    - images/309-fill.svg
+    - images/310-fill.svg
+    - images/311-fill.svg
+    - images/312-fill.svg
+    - images/313-fill.svg
+    - images/314-fill.svg
+    - images/315-fill.svg
+    - images/316-fill.svg
+    - images/317-fill.svg
+    - images/318-fill.svg
+    - images/350-fill.svg
+    - images/351-fill.svg
+    - images/399-fill.svg
+    - images/400-fill.svg
+    - images/401-fill.svg
+    - images/402-fill.svg
+    - images/403-fill.svg
+    - images/404-fill.svg
+    - images/405-fill.svg
+    - images/406-fill.svg
+    - images/407-fill.svg
+    - images/408-fill.svg
+    - images/409-fill.svg
+    - images/410-fill.svg
+    - images/456-fill.svg
+    - images/457-fill.svg
+    - images/499-fill.svg
+    - images/500-fill.svg
+    - images/501-fill.svg
+    - images/502-fill.svg
+    - images/503-fill.svg
+    - images/504-fill.svg
+    - images/507-fill.svg
+    - images/508-fill.svg
+    - images/509-fill.svg
+    - images/510-fill.svg
+    - images/511-fill.svg
+    - images/512-fill.svg
+    - images/513-fill.svg
+    - images/514-fill.svg
+    - images/515-fill.svg
+    - images/900-fill.svg
+    - images/901-fill.svg
+    - images/999-fill.svg
+  # 以8开头的图片没有带-fill后缀的图片
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
