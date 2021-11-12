@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:today/bean/weather/weather_city_bean.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
+import 'package:today/bean/weather/weather_seven_day_bean.dart';
 import 'package:today/constact/constact_dio.dart';
 import 'package:today/net/http_dio.dart';
 
 var weatherHelper = WeatherHttpHelper._internal();
 
 class WeatherHttpHelper {
-
   //私有化构造函数
   WeatherHttpHelper._internal();
 
@@ -43,18 +43,38 @@ class WeatherHttpHelper {
   }
 
   //请求逐小时天气预报
-  Future<WeatherHourBean?> getWeatherHour(String location) async{
+  Future<WeatherHourBean?> getWeatherHour(String location) async {
     //设置基地址
     dio.options.baseUrl = DioNetConstant.DIO_BASE_URL_WEATHER;
     //设置请求参数
-    final Map<String,dynamic> queryParams = Map();
+    final Map<String, dynamic> queryParams = Map();
     queryParams[DioNetConstant.REQUEST_WEATHER_LOCATION] = location;
     //开始请求
-    Response result = await DioUtils.getResponse(DioNetConstant.PATH_GET_WEATHER_HOUR, queryParams);
+    Response result = await DioUtils.getResponse(
+        DioNetConstant.PATH_GET_WEATHER_HOUR, queryParams);
 
-    if(result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE){
+    if (result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE) {
       return WeatherHourBean.fromJson(result.data);
     }
+    return null;
+  }
+
+  //请求未来七天的天气预报
+  Future<WeatherSevenDayBean?> getWeatherSevenDay(String location) async {
+    //设置基地址
+    dio.options.baseUrl = DioNetConstant.DIO_BASE_URL_WEATHER;
+    //设置请求参数
+    final Map<String, dynamic> queryParams = Map();
+    queryParams[DioNetConstant.REQUEST_WEATHER_LOCATION] = location;
+    //开始请求
+    Response result = await DioUtils.getResponse(
+        DioNetConstant.PATH_GET_WEATHER_SEVEN_DAY, queryParams);
+
+    //如果请求成功，将数据返回出去
+    if (result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE) {
+      return WeatherSevenDayBean.fromJson(result.data);
+    }
+    //数据请求失败，返回空
     return null;
   }
 }

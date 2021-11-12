@@ -2,6 +2,7 @@ import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
+import 'package:today/bean/weather/weather_seven_day_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/net/http_weather_helper.dart';
 import 'package:today/ui/weather/home/weather_info_widget.dart';
@@ -33,7 +34,10 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
         this.view.requestWeatherNowSuccess(result!);
 
         //接着请求逐小时天气信息
-        getWeatherHourInfo(cityInfo);
+        _getWeatherHourInfo(cityInfo);
+
+        //请求未来七天天气预报
+        _getWeatherSevenDay(cityInfo);
       }else{
         //数据请求失败
         _oldCityInfo = null;
@@ -42,7 +46,7 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
   }
 
   //请求逐小时天气信息
-  void getWeatherHourInfo(String cityInfo) async{
+  void _getWeatherHourInfo(String cityInfo) async{
     final WeatherHourBean? result = await this.model.getWeatherHourInfo(cityInfo);
     if(checkHttpResult(result, result?.hourly)){
       //数据请求成功
@@ -50,6 +54,14 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
     }
   }
 
+  //请求未来七天天气预报
+  void _getWeatherSevenDay(String cityInfo) async{
+    final WeatherSevenDayBean? result = await this.model.getWeatherSevenDay(cityInfo);
+    if(checkHttpResult(result, result?.daily)){
+      //数据请求成功
+      this.view.requestWeatherSevenDay(result!);
+    }
+  }
 }
 
 
@@ -62,4 +74,7 @@ class WeatherInfoModel extends BaseModel<WeatherInfoPresenter>{
 
   //请求逐小时天气信息
   Future<WeatherHourBean?> getWeatherHourInfo(String cityInfo) => weatherHelper.getWeatherHour(cityInfo); 
+
+  //请求未来七天天气预报
+  Future<WeatherSevenDayBean?> getWeatherSevenDay(String cityInfo) => weatherHelper.getWeatherSevenDay(cityInfo);
 }

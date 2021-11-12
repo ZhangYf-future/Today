@@ -7,6 +7,7 @@ class DateUtils {
   static const String FORMAT_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
   static const String FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
   static const String FORMAT_HH_MM_SS = "HH:mm:ss";
+  static const String FORMAT_HH_MM = "HH:mm";
 
   //获取当前时间
   static String getCurrentTime() {
@@ -66,5 +67,12 @@ class DateUtils {
     final now = DateTime.now();
     final nowInt = now.millisecondsSinceEpoch;
     return nowInt - time > 20 * 60 * 1000;
+  }
+
+  //获取时间字符串的信息
+  static String string2Date(String time){
+    final dateTime = DateTime.parse(time).toLocal();
+    final dateFormat = DateFormat(FORMAT_HH_MM).format(dateTime);
+    return dateFormat;
   }
 }

@@ -5,9 +5,11 @@ import 'package:today/base/base_view.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
+import 'package:today/bean/weather/weather_seven_day_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/ui/weather/home/weather_info_mvp.dart';
 import 'package:today/utils/constant.dart';
+import 'package:today/utils/date_utils.dart' as date;
 
 ///页面UI
 class WeatherInfoWidget extends StatefulWidget {
@@ -54,6 +56,11 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
     this.updatePage();
   }
 
+  //未来七天天气预报
+  void requestWeatherSevenDay(WeatherSevenDayBean bean){
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -71,7 +78,7 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
 
                 //逐小时天气预报
                 Padding(
-                  padding: EdgeInsets.only(top: 20.0),
+                  padding: EdgeInsets.only(top: 12.0),
                   child: this._weatherHourBean == null ||
                           this._weatherHourBean!.hourly == null
                       ? null
@@ -208,9 +215,9 @@ class _WeatherHourWidget extends StatelessWidget {
   _WeatherHourWidget(this._weatherHourBean);
 
   //返回当前图片的途径信息
-  String _getImagePath(WeatherHourRealBean bean){
+  String _getImagePath(WeatherHourRealBean bean) {
     String image = bean.icon;
-    if(image.startsWith("8")){
+    if (image.startsWith("8")) {
       return "images/${bean.icon}.svg";
     }
     return "images/${bean.icon}-fill.svg";
@@ -233,21 +240,43 @@ class _WeatherHourWidget extends StatelessWidget {
                     child: Column(
                       children: [
                         //天气图标
-                        SvgPicture.asset(_getImagePath(item),
-                          color: Colors.redAccent,
-                          width: 50.0,
-                          height: 50.0,
-                          
+                        SvgPicture.asset(
+                          _getImagePath(item),
+                          width: 30.0,
+                          height: 30.0,
+                          color: Colors.deepOrangeAccent,
                         ),
 
-                        //天气描述文本
-                        Center(
-                          child: Text(item.text),
+                        //天气文本和温度
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 10.0,
+                          ),
+                          child: Center(
+                            child: Text("${item.text} · ${item.temp}℃",
+                            
+                              style: TextStyle(
+                                color: Colors.tealAccent
+                              ),
+                            ),
+                          ),
                         ),
 
-                        //温度文本
-                        Center(
-                          child: Text(item.temp),
+                        //时间
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 6.0,
+                            bottom: 6.0,
+                          ),
+                          child: Center(
+                            child: Text(
+                              date.DateUtils.string2Date(item.fxTime),
+                              style: TextStyle(
+                                color: Colors.limeAccent,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
