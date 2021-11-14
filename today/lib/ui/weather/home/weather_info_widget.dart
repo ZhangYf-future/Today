@@ -33,6 +33,9 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
   //24小时逐小时天气预报
   WeatherHourBean? _weatherHourBean;
 
+  //未来七天的天气预报
+  WeatherSevenDayBean? _weatherSevenDayBean;
+
   WeatherInfoState() {
     this._presenter = WeatherInfoPresenter(this);
   }
@@ -56,9 +59,10 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
     this.updatePage();
   }
 
-  //未来七天天气预报
-  void requestWeatherSevenDay(WeatherSevenDayBean bean){
-    
+  //未来七天天气预报请求成功
+  void requestWeatherSevenDay(WeatherSevenDayBean bean) {
+    this._weatherSevenDayBean = bean;
+    this.updatePage();
   }
 
   @override
@@ -83,6 +87,14 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
                           this._weatherHourBean!.hourly == null
                       ? null
                       : _WeatherHourWidget(this._weatherHourBean!),
+                ),
+
+                //未来七天的天气预报
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: this._weatherSevenDayBean == null
+                      ? null
+                      : _WeatherSevenDayWidget(this._weatherSevenDayBean!),
                 ),
               ],
             ),
@@ -253,11 +265,9 @@ class _WeatherHourWidget extends StatelessWidget {
                             top: 10.0,
                           ),
                           child: Center(
-                            child: Text("${item.text} · ${item.temp}℃",
-                            
-                              style: TextStyle(
-                                color: Colors.tealAccent
-                              ),
+                            child: Text(
+                              "${item.text} · ${item.temp}℃",
+                              style: TextStyle(color: Colors.tealAccent),
                             ),
                           ),
                         ),
@@ -265,7 +275,7 @@ class _WeatherHourWidget extends StatelessWidget {
                         //时间
                         Padding(
                           padding: EdgeInsets.only(
-                            top: 6.0,
+                            top: 10.0,
                             bottom: 6.0,
                           ),
                           child: Center(
@@ -284,6 +294,93 @@ class _WeatherHourWidget extends StatelessWidget {
                 )
                 .toList(),
           ),
+        ),
+      );
+}
+
+//未来七天的天气预报信息
+class _WeatherSevenDayWidget extends StatelessWidget {
+  //每一天的天气信息
+  final WeatherSevenDayBean _bean;
+
+  _WeatherSevenDayWidget(this._bean);
+
+  //返回当前图片的途径信息
+  String _getImagePath(WeatherSevenDayRealBean bean) {
+    String image = bean.iconDay;
+    if (image.startsWith("8")) {
+      return "images/${bean.iconDay}.svg";
+    }
+    return "images/${bean.iconDay}-fill.svg";
+  }
+
+  @override
+  Widget build(BuildContext context) => Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        color: Colors.blueAccent,
+        child: Column(
+          children: this
+              ._bean
+              .daily!
+              .map(
+                (e) => Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //时间
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          date.DateUtils.getDayDescription(e.fxDate),
+                          style: TextStyle(
+                              color: Colors.amberAccent, fontSize: 14.0),
+                        ),
+                      ),
+                    ),
+
+                    //天气温度图标和文本描述
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              this._getImagePath(e),
+                              color: Colors.orangeAccent,
+                              width: 20.0,
+                              height: 20.0,
+                            ),
+                            //天气描述信息
+                            Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                e.textDay,
+                                style: TextStyle(
+                                  color: Colors.orangeAccent,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+
+                    //天气温度
+                    Expanded(
+                      child: Text(
+                        "${e.tempMin}℃ ~ ${e.tempMax}℃",
+                        style: TextStyle(
+                            color: Colors.amberAccent, fontSize: 14.0),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              )
+              .toList(),
         ),
       );
 }
