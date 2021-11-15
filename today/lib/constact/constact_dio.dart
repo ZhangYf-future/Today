@@ -19,7 +19,13 @@ class DioNetConstant {
   static const PATH_GET_WEATHER_HOUR = "/v7/weather/24h";
   //未来七天天气预报路径
   static const PATH_GET_WEATHER_SEVEN_DAY = "/v7/weather/7d";
+  //获取生活指数的路径
+  static const PATH_GET_WEATHER_LIFE = "/v7/indices/1d";
+  //获取天气灾害预警信息的路径
+  static const PATH_GET_WEATHER_WARNING = "/v7/warning/now";
 
   //location
   static const REQUEST_WEATHER_LOCATION = "location";
+  //type
+  static const REQUEST_WEATHER_TYPE = "type";
 }

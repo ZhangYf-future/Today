@@ -1,8 +1,10 @@
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
+import 'package:today/bean/weather/weather_life_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/bean/weather/weather_seven_day_bean.dart';
+import 'package:today/bean/weather/weather_warning_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/net/http_weather_helper.dart';
 import 'package:today/ui/weather/home/weather_info_widget.dart';
@@ -38,6 +40,12 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
 
         //请求未来七天天气预报
         _getWeatherSevenDay(cityInfo);
+
+        //请求生活指数信息
+        _getWeatherLifeInfo(cityInfo);
+
+        //请求报警信息
+        _getWeatherWarningInfo(cityInfo);
       }else{
         //数据请求失败
         _oldCityInfo = null;
@@ -62,6 +70,23 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
       this.view.requestWeatherSevenDay(result!);
     }
   }
+
+  //请求当天的生活指数
+  void _getWeatherLifeInfo(String cityInfo) async{
+    final WeatherLifeBean? result = await this.model.getWeatherLifeInfo(cityInfo);
+    if(checkHttpResult(result, result?.daily)){
+      //数据请求成功
+      this.view.requestWeatherLifeSuccess(result!);
+    }
+  }
+
+  //请求当天的报警信息
+  void _getWeatherWarningInfo(String cityInfo) async{
+    final WeatherWarningBean? result = await this.model.getWeatherWarningInfo(cityInfo);
+    if(checkHttpResult(result, result?.warning)){
+      //数据请求成功
+    }
+  }
 }
 
 
@@ -77,4 +102,10 @@ class WeatherInfoModel extends BaseModel<WeatherInfoPresenter>{
 
   //请求未来七天天气预报
   Future<WeatherSevenDayBean?> getWeatherSevenDay(String cityInfo) => weatherHelper.getWeatherSevenDay(cityInfo);
+
+  //请求当天的生活指数
+  Future<WeatherLifeBean?> getWeatherLifeInfo(String cityInfo) => weatherHelper.getWeatherLifeInfo(cityInfo);
+
+  //请求当天的报警信息
+  Future<WeatherWarningBean?> getWeatherWarningInfo(String cityInfo) => weatherHelper.getWeatherWarningInfo(cityInfo);
 }

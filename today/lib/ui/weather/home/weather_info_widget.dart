@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
+import 'package:today/bean/weather/weather_life_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/bean/weather/weather_seven_day_bean.dart';
 import 'package:today/constact/constact_string.dart';
@@ -36,6 +37,9 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
   //未来七天的天气预报
   WeatherSevenDayBean? _weatherSevenDayBean;
 
+  //今天的生活指数
+  WeatherLifeBean? _weatherLifeBean;
+
   WeatherInfoState() {
     this._presenter = WeatherInfoPresenter(this);
   }
@@ -62,6 +66,12 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
   //未来七天天气预报请求成功
   void requestWeatherSevenDay(WeatherSevenDayBean bean) {
     this._weatherSevenDayBean = bean;
+    this.updatePage();
+  }
+
+  //当日的生活指数请求成功
+  void requestWeatherLifeSuccess(WeatherLifeBean bean) {
+    this._weatherLifeBean = bean;
     this.updatePage();
   }
 
@@ -96,6 +106,18 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
                       ? null
                       : _WeatherSevenDayWidget(this._weatherSevenDayBean!),
                 ),
+
+                //生活指数
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 10.0),
+                  child: this._weatherLifeBean == null ||
+                          this._weatherLifeBean!.daily == null
+                      ? null
+                      : _WeatherLifeWidget(this._weatherLifeBean!),
+                ),
+
+                //最后一个Padding用作空隙
+                Padding(padding: EdgeInsets.only(top: 20.0)),
               ],
             ),
           ),
@@ -381,6 +403,66 @@ class _WeatherSevenDayWidget extends StatelessWidget {
                 ),
               )
               .toList(),
+        ),
+      );
+}
+
+//生活指数请求成功
+class _WeatherLifeWidget extends StatelessWidget {
+  //生活指数数据
+  final WeatherLifeBean _bean;
+
+  //构造函数
+  _WeatherLifeWidget(this._bean);
+
+  //页面UI
+  @override
+  Widget build(BuildContext context) => Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        color: Colors.blueAccent,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 12.0),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: this
+                  ._bean
+                  .daily!
+                  .map(
+                    (e) => Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        start: 10.0,
+                        top: 10.0,
+                        bottom: 10.0,
+                        end: 10.0,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(e.name,
+                            style: TextStyle(
+                              color: Colors.limeAccent,
+                              fontSize: 16.0
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 10.0),
+                          child: Text(e.category,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16.0
+                              ),
+                          ),
+
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
         ),
       );
 }

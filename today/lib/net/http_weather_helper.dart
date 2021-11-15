@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:today/bean/weather/weather_city_bean.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
+import 'package:today/bean/weather/weather_life_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/bean/weather/weather_seven_day_bean.dart';
+import 'package:today/bean/weather/weather_warning_bean.dart';
 import 'package:today/constact/constact_dio.dart';
 import 'package:today/net/http_dio.dart';
 
@@ -73,6 +75,48 @@ class WeatherHttpHelper {
     //如果请求成功，将数据返回出去
     if (result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE) {
       return WeatherSevenDayBean.fromJson(result.data);
+    }
+    //数据请求失败，返回空
+    return null;
+  }
+
+  //请求当天的生活指数信息
+  Future<WeatherLifeBean?> getWeatherLifeInfo(String location) async{
+    //设置基地址
+    dio.options.baseUrl = DioNetConstant.DIO_BASE_URL_WEATHER;
+    //设置请求参数
+    final Map<String, dynamic> queryParams = Map();
+    //设置location
+    queryParams[DioNetConstant.REQUEST_WEATHER_LOCATION] = location;
+    //设置type为请求全部天气指数
+    queryParams[DioNetConstant.REQUEST_WEATHER_TYPE] = "0";
+    //开始请求
+    Response result = await DioUtils.getResponse(
+        DioNetConstant.PATH_GET_WEATHER_LIFE, queryParams);
+
+    //如果请求成功，将数据返回出去
+    if (result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE) {
+      return WeatherLifeBean.fromJson(result.data);
+    }
+    //数据请求失败，返回空
+    return null;
+  }
+
+  //请求报警信息
+  Future<WeatherWarningBean?> getWeatherWarningInfo(String location) async{
+    //设置基地址
+    dio.options.baseUrl = DioNetConstant.DIO_BASE_URL_WEATHER;
+    //设置请求参数
+    final Map<String, dynamic> queryParams = Map();
+    //设置location
+    queryParams[DioNetConstant.REQUEST_WEATHER_LOCATION] = location;
+    //开始请求
+    Response result = await DioUtils.getResponse(
+        DioNetConstant.PATH_GET_WEATHER_WARNING, queryParams);
+
+    //如果请求成功，将数据返回出去
+    if (result.statusCode == DioNetConstant.WEATHER_HTTP_SUCCESS_CODE) {
+      return WeatherWarningBean.fromJson(result.data);
     }
     //数据请求失败，返回空
     return null;
