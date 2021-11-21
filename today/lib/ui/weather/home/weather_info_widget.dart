@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:today/base/base_view.dart';
+import 'package:today/bean/weather/weather_air_quality_bean.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_life_bean.dart';
@@ -40,6 +41,9 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
   //今天的生活指数
   WeatherLifeBean? _weatherLifeBean;
 
+  //空气质量数据
+  WeatherAirQualityBean? _weatherAirQualityBean;
+
   WeatherInfoState() {
     this._presenter = WeatherInfoPresenter(this);
   }
@@ -72,6 +76,12 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
   //当日的生活指数请求成功
   void requestWeatherLifeSuccess(WeatherLifeBean bean) {
     this._weatherLifeBean = bean;
+    this.updatePage();
+  }
+
+  //空气质量数据请求成功
+  void requestWeatherAirQualitySuccess(WeatherAirQualityBean bean) {
+    this._weatherAirQualityBean = bean;
     this.updatePage();
   }
 
@@ -114,6 +124,16 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
                           this._weatherLifeBean!.daily == null
                       ? null
                       : _WeatherLifeWidget(this._weatherLifeBean!),
+                ),
+
+                //空气质量
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 10.0),
+                  child: this._weatherAirQualityBean == null ||
+                          this._weatherAirQualityBean!.now == null
+                      ? null
+                      : _WeatherAirQualityWidget(
+                          this._weatherAirQualityBean!.now!),
                 ),
 
                 //最后一个Padding用作空隙
@@ -276,8 +296,8 @@ class _WeatherHourWidget extends StatelessWidget {
                         //天气图标
                         SvgPicture.asset(
                           _getImagePath(item),
-                          width: 30.0,
-                          height: 30.0,
+                          width: 26.0,
+                          height: 26.0,
                           color: Colors.deepOrangeAccent,
                         ),
 
@@ -407,7 +427,7 @@ class _WeatherSevenDayWidget extends StatelessWidget {
       );
 }
 
-//生活指数请求成功
+//生活指数信息
 class _WeatherLifeWidget extends StatelessWidget {
   //生活指数数据
   final WeatherLifeBean _bean;
@@ -440,28 +460,141 @@ class _WeatherLifeWidget extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Text(e.name,
+                          Text(
+                            e.name,
                             style: TextStyle(
-                              color: Colors.limeAccent,
-                              fontSize: 16.0
+                                color: Colors.limeAccent, fontSize: 16.0),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: Text(
+                              e.category,
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 16.0),
                             ),
                           ),
-                          Padding(padding: EdgeInsets.only(top: 10.0),
-                          child: Text(e.category,
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16.0
-                              ),
-                          ),
-
-                          ),
-                          
                         ],
                       ),
                     ),
                   )
                   .toList(),
             ),
+          ),
+        ),
+      );
+}
+
+//空气质量信息
+class _WeatherAirQualityWidget extends StatelessWidget {
+  //空气质量信息
+  final WeatherAirQualityRealBean _bean;
+
+  _WeatherAirQualityWidget(this._bean);
+
+  @override
+  Widget build(BuildContext context) => Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        color: Colors.blueAccent,
+        child: Padding(
+          padding: EdgeInsetsDirectional.all(10.0),
+          child: Column(
+            children: [
+              //空气质量和主要污染物
+              Row(
+                children: [
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "${StringConstant.AIR_QUALITY}:\n",
+                        style: TextStyle(
+                          color: Colors.limeAccent,
+                          fontSize: 16.0,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: this._bean.category,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                            )
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "${StringConstant.MAIN_POLLUTANTS}:\n",
+                        style: TextStyle(
+                          color: Colors.limeAccent,
+                          fontSize: 16.0,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: this._bean.primary,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                            )
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              //pm2.5和pm10
+              Padding(padding: EdgeInsetsDirectional.only(top: 15.0),
+                child: Row(
+               children: [
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "${StringConstant.WEATHER_PM_2_5}:\n",
+                        style: TextStyle(
+                          color: Colors.limeAccent,
+                          fontSize: 16.0,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: this._bean.pm2p5,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                            )
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "${StringConstant.WEATHER_PM_10}:\n",
+                        style: TextStyle(
+                          color: Colors.limeAccent,
+                          fontSize: 16.0,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: this._bean.pm10,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                            )
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              ),
+              
+            ],
           ),
         ),
       );

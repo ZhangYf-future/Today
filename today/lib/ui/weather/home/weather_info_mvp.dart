@@ -1,5 +1,6 @@
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
+import 'package:today/bean/weather/weather_air_quality_bean.dart';
 import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_life_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
@@ -44,8 +45,11 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
         //请求生活指数信息
         _getWeatherLifeInfo(cityInfo);
 
+        //请求空气质量信息
+        _getAirQualityInfo(cityInfo);
+
         //请求报警信息
-        _getWeatherWarningInfo(cityInfo);
+        //_getWeatherWarningInfo(cityInfo);
       }else{
         //数据请求失败
         _oldCityInfo = null;
@@ -85,6 +89,16 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
     final WeatherWarningBean? result = await this.model.getWeatherWarningInfo(cityInfo);
     if(checkHttpResult(result, result?.warning)){
       //数据请求成功
+      //this.view.requestWeatherSevenDay(bean)
+    }
+  }
+
+  //请求空气质量信息
+  void _getAirQualityInfo(String cityInfo) async{
+    final WeatherAirQualityBean? airQualityResult = await this.model.getWeatherAirQualityInfo(cityInfo);
+    if(checkHttpResult(airQualityResult, airQualityResult?.now)){
+      //数据请求成功
+      this.view.requestWeatherAirQualitySuccess(airQualityResult!);
     }
   }
 }
@@ -108,4 +122,7 @@ class WeatherInfoModel extends BaseModel<WeatherInfoPresenter>{
 
   //请求当天的报警信息
   Future<WeatherWarningBean?> getWeatherWarningInfo(String cityInfo) => weatherHelper.getWeatherWarningInfo(cityInfo);
+
+  //请求空气质量信息
+  Future<WeatherAirQualityBean?> getWeatherAirQualityInfo(String cityInfo) => weatherHelper.getWeatherAirQualityInfo(cityInfo);
 }

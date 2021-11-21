@@ -123,4 +123,8 @@ class StringConstant {
   static const String DO_NOT_ALWAYS_REQUEST = "请不要重复发起请求";
   static const String HUMIDITY_INFO = "相对湿度";
   static const String FEELS_LIKE = "体感温度";
+  static const String AIR_QUALITY = "空气质量";
+  static const String MAIN_POLLUTANTS = "主要污染物";
+  static const String WEATHER_PM_2_5 = "PM2.5";
+  static const String WEATHER_PM_10 = "PM10";
 }

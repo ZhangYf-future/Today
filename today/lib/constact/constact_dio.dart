@@ -23,6 +23,8 @@ class DioNetConstant {
   static const PATH_GET_WEATHER_LIFE = "/v7/indices/1d";
   //获取天气灾害预警信息的路径
   static const PATH_GET_WEATHER_WARNING = "/v7/warning/now";
+  //获取空气质量信息
+  static const PATH_GET_AIR_QUALITY = "/v7/air/now";
 
   //location
   static const REQUEST_WEATHER_LOCATION = "location";

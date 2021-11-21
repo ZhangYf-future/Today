@@ -34,12 +34,11 @@ class DioUtils {
     //设置日志拦截器
     dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
       //打印信息
-      Logs.ez("request：uri is:${options.uri}");
-      Logs.ez("request: data is:${options.data}");
+      Logs.ez("request：uri is:${options.uri}  ===  data is:${options.data}");
       return handler.next(options);
     }, onResponse: (response, handler) {
       //打印请求到的数据
-      Logs.ez("response: data is: ${response.data}");
+      Logs.ez("response:uri is:${response.realUri}  ===  data is: ${response.data}");
       return handler.next(response);
     }));
   }
