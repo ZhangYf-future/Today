@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_utils.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
@@ -11,6 +12,7 @@ class SplashRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _ContentWidget(),
+      backgroundColor: ColorConstant.COLOR_THEME_BACKGROUND,
     );
   }
 }
@@ -30,6 +32,7 @@ class _ContentState extends State<_ContentWidget> {
     \n\n
             不积小流，无以成江海。
   """;
+
   @override
   void initState() {
     super.initState();
@@ -38,13 +41,30 @@ class _ContentState extends State<_ContentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      color: ColorConstant.COLOR_THEME_BACKGROUND,
-      child: Text(
-        _splashText,
-        style: TextStyle(fontSize: 24.0, color: Colors.white),
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(
+              _splashText,
+              style: TextStyle(fontSize: 24.0, color: Colors.white),
+            ),
+          ),
+        ),
+
+        Padding(padding: EdgeInsets.symmetric(vertical: 15.0),
+        
+          child: Text(StringConstant.WEATHER_DATA_FROM,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.0
+            ),
+          ),
+        )
+      ],
     );
   }
 

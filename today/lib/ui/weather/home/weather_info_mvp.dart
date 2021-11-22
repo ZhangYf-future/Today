@@ -49,7 +49,7 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
         _getAirQualityInfo(cityInfo);
 
         //请求报警信息
-        //_getWeatherWarningInfo(cityInfo);
+        _getWeatherWarningInfo(cityInfo);
       }else{
         //数据请求失败
         _oldCityInfo = null;
@@ -89,7 +89,7 @@ class WeatherInfoPresenter extends BasePresenter<WeatherInfoModel,WeatherInfoSta
     final WeatherWarningBean? result = await this.model.getWeatherWarningInfo(cityInfo);
     if(checkHttpResult(result, result?.warning)){
       //数据请求成功
-      //this.view.requestWeatherSevenDay(bean)
+      this.view.requestWeatherWarningSuccess(result!);
     }
   }
 

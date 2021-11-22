@@ -1,5 +1,9 @@
 ///字符串常量信息
 class StringConstant {
+
+  //检查当前的运行环境
+  static const String ENVIROMENT = "dart.vm.product";
+
    //首页
   static const String MY_DAY = "我的一天";
 
@@ -127,4 +131,7 @@ class StringConstant {
   static const String MAIN_POLLUTANTS = "主要污染物";
   static const String WEATHER_PM_2_5 = "PM2.5";
   static const String WEATHER_PM_10 = "PM10";
+  static const String WEATHER_WARNING = "预警";
+
+  static const String WEATHER_DATA_FROM = "天气数据来源于和风天气";
 }

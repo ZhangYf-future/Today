@@ -8,6 +8,7 @@ import 'package:today/bean/weather/weather_hour_bean.dart';
 import 'package:today/bean/weather/weather_life_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/bean/weather/weather_seven_day_bean.dart';
+import 'package:today/bean/weather/weather_warning_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/ui/weather/home/weather_info_mvp.dart';
 import 'package:today/utils/constant.dart';
@@ -43,6 +44,9 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
 
   //空气质量数据
   WeatherAirQualityBean? _weatherAirQualityBean;
+
+  //天气报警数据
+  WeatherWarningBean? _weatherWarningBean;
 
   WeatherInfoState() {
     this._presenter = WeatherInfoPresenter(this);
@@ -85,6 +89,12 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
     this.updatePage();
   }
 
+  //天气报警信息请求成功
+  void requestWeatherWarningSuccess(WeatherWarningBean bean) {
+    this._weatherWarningBean = bean;
+    this.updatePage();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -115,6 +125,16 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
                   child: this._weatherSevenDayBean == null
                       ? null
                       : _WeatherSevenDayWidget(this._weatherSevenDayBean!),
+                ),
+
+                //如果报警信息可用，首先显示报警信息
+                Padding(
+                  padding: EdgeInsetsDirectional.only(
+                      top: _checkWarningAvaliable() ? 0 : 10),
+                  child: _checkWarningAvaliable()
+                      ? _WeatherWarningWidget(
+                          this._weatherWarningBean!.warning!)
+                      : null,
                 ),
 
                 //生活指数
@@ -148,6 +168,12 @@ class WeatherInfoState extends BaseState<WeatherInfoWidget>
 
   @override
   bool get wantKeepAlive => true;
+
+  //判断报警信息是否可用
+  bool _checkWarningAvaliable() =>
+      this._weatherWarningBean != null &&
+      this._weatherWarningBean!.warning != null &&
+      this._weatherWarningBean!.warning!.isNotEmpty;
 }
 
 ///实时天气部分
@@ -506,95 +532,139 @@ class _WeatherAirQualityWidget extends StatelessWidget {
                   Expanded(
                     child: Text.rich(
                       TextSpan(
-                        text: "${StringConstant.AIR_QUALITY}:\n",
-                        style: TextStyle(
-                          color: Colors.limeAccent,
-                          fontSize: 16.0,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: this._bean.category,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0
-                            )
-                          )
-                        ]
-                      ),
+                          text: "${StringConstant.AIR_QUALITY}:\n",
+                          style: TextStyle(
+                            color: Colors.limeAccent,
+                            fontSize: 16.0,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: this._bean.category,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18.0))
+                          ]),
                     ),
                   ),
                   Expanded(
                     child: Text.rich(
                       TextSpan(
-                        text: "${StringConstant.MAIN_POLLUTANTS}:\n",
-                        style: TextStyle(
-                          color: Colors.limeAccent,
-                          fontSize: 16.0,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: this._bean.primary,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0
-                            )
-                          )
-                        ]
-                      ),
+                          text: "${StringConstant.MAIN_POLLUTANTS}:\n",
+                          style: TextStyle(
+                            color: Colors.limeAccent,
+                            fontSize: 16.0,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: this._bean.primary,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18.0))
+                          ]),
                     ),
                   ),
                 ],
               ),
 
               //pm2.5和pm10
-              Padding(padding: EdgeInsetsDirectional.only(top: 15.0),
+              Padding(
+                padding: EdgeInsetsDirectional.only(top: 15.0),
                 child: Row(
-               children: [
-                  Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        text: "${StringConstant.WEATHER_PM_2_5}:\n",
-                        style: TextStyle(
-                          color: Colors.limeAccent,
-                          fontSize: 16.0,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: this._bean.pm2p5,
+                  children: [
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                            text: "${StringConstant.WEATHER_PM_2_5}:\n",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0
-                            )
-                          )
-                        ]
+                              color: Colors.limeAccent,
+                              fontSize: 16.0,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: this._bean.pm2p5,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.0))
+                            ]),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        text: "${StringConstant.WEATHER_PM_10}:\n",
-                        style: TextStyle(
-                          color: Colors.limeAccent,
-                          fontSize: 16.0,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: this._bean.pm10,
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                            text: "${StringConstant.WEATHER_PM_10}:\n",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0
-                            )
-                          )
-                        ]
+                              color: Colors.limeAccent,
+                              fontSize: 16.0,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: this._bean.pm10,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.0))
+                            ]),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              ),
-              
             ],
+          ),
+        ),
+      );
+}
+
+//报警信息
+class _WeatherWarningWidget extends StatelessWidget {
+  final List<WeatherWarningRealBean> _list;
+
+  _WeatherWarningWidget(this._list);
+
+  @override
+  Widget build(BuildContext context) => Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        color: Colors.blueAccent,
+        child: Padding(
+          padding: EdgeInsetsDirectional.only(start: 10.0, end: 10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _list
+                .map(
+                  (item) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //预警标题
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.0),
+                        child: Text(
+                          "${item.typeName}${item.level}${StringConstant.WEATHER_WARNING}",
+                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        ),
+                      ),
+
+                      //预警详情
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(top: 10.0),
+                        child: Text(
+                          '${item.sender ?? ""}${item.text}',
+                          style: TextStyle(color: Colors.white, fontSize: 13.0),
+                        ),
+                      ),
+
+                      //分割线
+                      Container(
+                        margin: EdgeInsetsDirectional.only(top: 10),
+                        height: 1.0,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: <Color>[
+                          Colors.white10,
+                          Colors.white,
+                          Colors.white10
+                        ])),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
           ),
         ),
       );
