@@ -34,6 +34,8 @@ class StringConstant {
   static const String ALL_BILL = "全部账单";
   //暂无地址
   static const String NO_ADDRESS = "暂无地址";
+  //暂无备注
+  static const String NO_REMARK = "暂无备注";
 
   static const String ERROR_INPUT_RIGHT_PLAN_AMOUNT = "请输入正确的计划金额";
   static const String ERROR_YEAR = "错误的年份信息，请检查";
@@ -111,6 +113,8 @@ class StringConstant {
   static const String ERROR_BILL_PLAN = "请检查计划信息是否设置";
   //账单类型出错
   static const String ERROR_BILL_TYPE = "请检查账单类型是否选择";
+  //计划消费金额出错
+  static const String ERROR_BILL_PLAN_AMOUNT = "请输入正确的计划消费金额";
 
     static const String WEATHER_NOW = "实时天气";
   static const String WEATHER_CLICK_WATCH_DETAILS = "点击查看天气详情>";
@@ -134,4 +138,7 @@ class StringConstant {
   static const String WEATHER_WARNING = "预警";
 
   static const String WEATHER_DATA_FROM = "天气数据来源于和风天气";
+
+  //城市数量超过5个的错误提示
+  static const String WEATHER_CITY_MORE_THAN_MAX = "当前最多支持添加5个城市";
 }

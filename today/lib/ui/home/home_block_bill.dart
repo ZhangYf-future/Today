@@ -80,7 +80,7 @@ class HomeBillBlockWidget extends StatelessWidget {
                       fontSize: 18, color: ColorConstant.COLOR_F2F2F2),
                   children: [
                     TextSpan(
-                      text: "$_amount",
+                      text: "${_amount!.toStringAsFixed(2)}",
                       style: TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,

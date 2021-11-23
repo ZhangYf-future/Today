@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.4+5
+version: 1.0.6+7
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -29,9 +29,9 @@ dependencies:
   sqflite: ^2.0.0+4
   #弹出Toast的插件
   fluttertoast: ^8.0.8
-# 请求权限的插件(需要设置android的compileSDK为31)
+  #请求权限的插件(需要设置android的compileSDK为31)
   permission_handler: ^8.2.2
-# 网络请求的插件
+  #网络请求的插件
   dio: ^4.0.0
   #高德地图定位插件
   amap_flutter_location: ^2.0.0

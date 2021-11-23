@@ -4,6 +4,7 @@ import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
+import 'package:today/utils/string_utils.dart';
 
 ///账单列表页面
 ///这个页面会加在全部的账单数据
@@ -209,27 +210,68 @@ class _BillContentItemWidget extends StatelessWidget {
 
             //中间显示金额信息
             Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
               child: Text(
-                "${_billBean.amount.toString()}元",
+                "${_billBean.amount.toStringAsFixed(2)}元",
                 style: TextStyle(
                   color: Colors.deepOrangeAccent,
-                  fontSize: 18.0,
+                  fontSize: 20.0,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
 
             //右下角显示位置信息
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "${_billBean.address == null ? StringConstant.NO_ADDRESS : _billBean.address}",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.0,
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${StringConstant.ADDRESS}:",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Text(
+                    StringUtils.isEmpty(_billBean.address)
+                        ? StringConstant.NO_ADDRESS
+                        : _billBean.address,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            Padding(padding: EdgeInsets.only(top: 15.0)),
+            //备注信息
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${StringConstant.REMARK}:",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    StringUtils.isEmpty(_billBean.remark)
+                        ? StringConstant.NO_REMARK
+                        : _billBean.remark,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

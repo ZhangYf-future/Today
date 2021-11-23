@@ -14,6 +14,8 @@ class BillEvent {
   static const int BILL_CHANGE_ADD = 1;
   //删除账单
   static const int BILL_CHANGE_DELETE = 2;
+  //月度计划添加成功
+  static const int BILL_MONTH_PLAN_ADD = 3;
 
   //私有构造函数
   BillEvent._internal();

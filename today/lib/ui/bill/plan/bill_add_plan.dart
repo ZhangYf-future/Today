@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_event.dart';
 import 'package:today/db/db_helper.dart';
+import 'package:today/event/event_bill.dart';
+import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart' as date_utils;
 ///添加账单计划的页面
@@ -178,10 +181,15 @@ class _ContentState extends State<_ContentWidget> {
   void _insertPlanData() async {
     var bean = BillPlanBean();
     bean.planAmount = double.parse(_amountController.text);
+    if(bean.planAmount <= 0){
+      showInfo(StringConstant.ERROR_BILL_PLAN_AMOUNT);
+    }
     bean.planYear = _year;
     bean.planMonth = _month;
     var result = await _dbHelper.insertBillPlan(bean);
     if (result == StringConstant.INSERT_DATA_SUCCESS) {
+      //通知外部更新月度计划信息
+      billEvent.subscribe(EventConstant.EVENT_BILL_CHANGED, BillEvent.BILL_MONTH_PLAN_ADD);
       //退出当前页面并返回1表示成功
       Navigator.pop(context, 1);
     }

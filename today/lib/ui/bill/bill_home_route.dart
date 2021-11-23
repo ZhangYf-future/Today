@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_event.dart';
 import 'package:today/db/db_helper.dart';
+import 'package:today/event/event_bill.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
 import 'package:today/utils/string_utils.dart';
@@ -43,15 +45,13 @@ class _ContentState extends State<_ContentWidget> {
   BillPlanBean? _monthPlanBean;
 
   //本月消费金额
-  double _consumeAmount = -1;
+  double _consumeAmount = 0;
 
   //本月计划消费金额
-  double _consumePlan = -1;
+  double _consumePlan = 0;
 
   //本月剩余可用的消费金额
-  double _consumeSurplus = -1;
-
-  //本月剩余消费金额
+  double _consumeSurplus = 0;
 
   //本地数据库中保存的账单列表信息
   final List<BillBean> _billBeanList = List.empty(growable: true);
@@ -75,6 +75,13 @@ class _ContentState extends State<_ContentWidget> {
   @override
   void initState() {
     super.initState();
+    //月度计划添加成功
+    billEvent.addObserver(EventConstant.EVENT_BILL_CHANGED, (type) {
+      if(type == BillEvent.BILL_MONTH_PLAN_ADD){
+        //重新请求当前月度计划信息
+        _getMonthPlanInfo();
+      }
+    });
     //获取当前月份的账单计划信息
     _getMonthPlanInfo();
     _getAllBill();
@@ -88,9 +95,9 @@ class _ContentState extends State<_ContentWidget> {
           children: [
             //顶部显示统计信息
             _StatisticsWidget(
-              _consumeAmount >= 0 ? _consumeAmount.toString() : "",
-              _consumePlan >= 0 ? _consumePlan.toString() : "",
-              _consumeSurplus >= 0 ? _consumeSurplus.toString() : "",
+              _consumeAmount > 0 ? _consumeAmount.toStringAsFixed(2) : "",
+              _consumePlan > 0 ? _consumePlan.toStringAsFixed(2) : "",
+              _consumeSurplus > 0 ? _consumeSurplus.toStringAsFixed(2) : "",
             ),
 
             Expanded(
@@ -192,19 +199,19 @@ class _ContentState extends State<_ContentWidget> {
     _monthPlanBean = await _helper.getCurrentMonthPlan();
     if (_monthPlanBean != null) {
       //计划消费金额
-      this._consumePlan = _monthPlanBean!.planAmount;
+      this._consumePlan = double.parse(_monthPlanBean!.planAmount.toStringAsFixed(2));
       //获取当前消费计划下的账单金额信息
       var amountList =
           await _helper.getAllBillAmountWithPlanId(_monthPlanBean!.id);
-      if (amountList != null && amountList.isNotEmpty) {
+      if (amountList.isNotEmpty) {
         double totalAmount = 0;
         amountList.forEach((element) {
           totalAmount += element;
         });
-        this._consumeAmount = totalAmount;
+        this._consumeAmount = double.parse(totalAmount.toStringAsFixed(2));
       }
       //用计划金额减去已经消费的金额即为可用金额
-      this._consumeSurplus = _monthPlanBean!.planAmount - this._consumeAmount;
+      this._consumeSurplus = this._consumePlan - this._consumeAmount;
     }
     //更新页面
     _updatePage();
@@ -252,7 +259,7 @@ class _ContentState extends State<_ContentWidget> {
 
   //判断是否有账单数据
   bool _haveBillData() {
-    return this._billBeanList != null && this._billBeanList.isNotEmpty;
+    return this._billBeanList.isNotEmpty;
   }
 
   //更新页面
@@ -457,7 +464,7 @@ class _BillItemWidget extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Text(
-                '${_billBean.isPay ? "-" : "+"}${_billBean.amount}元',
+                '${_billBean.isPay ? "-" : "+"}${_billBean.amount.toStringAsFixed(2)}元',
                 style: TextStyle(
                   color:
                       _billBean.isPay ? Colors.redAccent : Colors.greenAccent,

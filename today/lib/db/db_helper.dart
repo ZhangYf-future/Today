@@ -260,6 +260,15 @@ class DBHelper {
   Future<DBResultEntity> insertWeatherCity(WeatherCityDBBean bean) async{
     final result = DBResultEntity();
     try{
+      //查询城市的总数
+      final List<Map<String,dynamic>> list = await _dbUtils.queryAllWeatherCityList();
+      if(list.isNotEmpty && list.length >= 5){
+        //城市数量超过5个,不能继续添加
+        result.code = DBConstant.DB_RESULT_FAILED;
+        result.msg = StringConstant.WEATHER_CITY_MORE_THAN_MAX;
+        return result;
+      }
+
       //查询是否已经有同样的数据了
       var checkRepeatData = await _dbUtils.queryWeatherCityExists(bean.hfId);
       if(checkRepeatData.isNotEmpty){

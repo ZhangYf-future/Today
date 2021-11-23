@@ -17,7 +17,7 @@ import 'package:today/utils/string_utils.dart';
 
 class CityAddPresenter extends BasePresenter<CityAddModel, CityAddState> {
   //记录上一次请求的数据
-  String? _oldCityName = null;
+  String? _oldCityName;
 
   CityAddPresenter(CityAddState view) : super(CityAddModel(), view);
 
@@ -57,16 +57,21 @@ class CityAddPresenter extends BasePresenter<CityAddModel, CityAddState> {
     if (result.code == DBConstant.DB_RESULT_FAILED) {
       if (result.result is WeatherCityDBBean &&
           (result.result as WeatherCityDBBean).hfId == bean.id) {
+        //当前城市被重复添加，发送通知给天气首页
         weatherCityEvent.notifyCityRepeatAddEvent(bean);
         this.view.showMessage(StringConstant.CURRENT_CITY_ADDED);
         this.view.exit();
+        return;
+      }
+      if(StringUtils.isNotEmpty(result.msg)){
+        this.view.showMessage(result.msg);
         return;
       }
       //插入数据失败
       this.view.showMessage(StringConstant.INSERT_DATA_ERROR);
       return;
     }
-    //插入数据成功
+    //插入数据成功，发送通知到天气首页
     weatherCityEvent.notifyCityAddEvent(bean);
     this.view.showMessage(StringConstant.SAVE_CITY_SUCCESS);
     this.view.exit();

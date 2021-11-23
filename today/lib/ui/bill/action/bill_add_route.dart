@@ -304,6 +304,12 @@ class _ContentState extends State<_ContentWidget> {
     //尝试转换用户输入的数据
     double? inputAmount = double.tryParse(_amountInputController.text);
     double amount = inputAmount == null ? 0 : inputAmount;
+
+    if(amount <= 0){
+      showInfo(StringConstant.ERROR_BILL_AMOUNT);
+      return;
+    }
+
     bean.amount = amount;
 
     //添加数据

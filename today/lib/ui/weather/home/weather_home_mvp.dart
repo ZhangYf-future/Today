@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
+import 'package:today/bean/weather/weather_city_bean.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/db/db_helper.dart';
@@ -60,6 +62,19 @@ class WeatherHomePresenter
   //请求全部的城市信息
   Future<List<WeatherCityDBBean>> getAllCityList() =>
       DBHelper().getAllWeatherCityList();
+
+  //判断当前被重复添加的城市在整个页面的第几个位置
+  int checkRepeatCityPosition(List<WeatherCityDBBean>? sourceList, WeatherCityBean cityBean){
+    if(sourceList == null || sourceList.isEmpty){
+      return -1;
+    }
+    for(int i = 0; i < sourceList.length;i++){
+      if(sourceList[i].hfId == cityBean.id){
+        return i;
+      }
+    }
+    return -1;
+  }
 }
 
 ///天气首页mvp模式实现

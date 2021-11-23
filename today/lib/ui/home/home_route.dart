@@ -22,10 +22,13 @@ class HomeRoute extends StatefulWidget {
 class HomeState extends BaseState<HomeRoute> {
   //需要显示的数据信息
   final List<HomeBlockBean> _homeBlockList = List.empty(growable: true);
+
   //页面逻辑操作
   HomeRoutePresenter? _presenter;
+
   //天气信息
   WeatherNowBean? _weatherNowBean;
+
   //今天已经消费的数据
   double? _todayAmount;
 
@@ -51,7 +54,10 @@ class HomeState extends BaseState<HomeRoute> {
   void _subscribeBillChange() {
     billEvent.addObserver(EventConstant.EVENT_BILL_CHANGED, (type) {
       //数据变化之后重新调用数据库查询方法
-      _loadTodayBillCount();
+      if (type == BillEvent.BILL_CHANGE_ADD ||
+          type == BillEvent.BILL_CHANGE_DELETE) {
+        _loadTodayBillCount();
+      }
     });
   }
 
@@ -68,7 +74,7 @@ class HomeState extends BaseState<HomeRoute> {
   }
 
   //实时天气获取完成后的回调
-  void loadNowWeatherSuccess(WeatherNowBean bean){
+  void loadNowWeatherSuccess(WeatherNowBean bean) {
     this._weatherNowBean = bean;
     updatePage();
   }
@@ -79,7 +85,6 @@ class HomeState extends BaseState<HomeRoute> {
     Logs.ez("今日账单:$_todayAmount");
     updatePage();
   }
-
 
   @override
   void dispose() {

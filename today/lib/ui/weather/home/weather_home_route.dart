@@ -29,7 +29,10 @@ class WeatherHomeState extends BaseState<WeatherHomeRoute> {
     _presenter = WeatherHomePresenter(this);
     weatherCityEvent.addCityRepeatAddedEvent((bean) {
       Logs.ez("城市被重复添加");
-      _pageController.jumpToPage(0);
+      int position = this._presenter!.checkRepeatCityPosition(this._pageList, bean);
+      if(position != -1){
+        _pageController.jumpToPage(position);
+      }
     });
 
     weatherCityEvent.addCityAddedEvent((bean) {
