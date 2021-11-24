@@ -304,4 +304,17 @@ class DBHelper {
 
     return cityList;
   }
+
+  //根据id删除一个城市信息
+  Future<DBResultEntity> deleteWeatherCityWithId(int id) async{
+    final result = DBResultEntity();
+    final deleteResult = await _dbUtils.deleteWeatherCityWithId(id);
+    if(deleteResult != -1){
+      result.code = DBConstant.DB_RESULT_SUCCESS;
+    }else{
+      result.code = DBConstant.DB_RESULT_FAILED;
+      result.msg = StringConstant.DELETE_CITY_ERROR;
+    }
+    return result;
+  }
 }

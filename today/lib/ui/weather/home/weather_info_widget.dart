@@ -10,9 +10,11 @@ import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/bean/weather/weather_seven_day_bean.dart';
 import 'package:today/bean/weather/weather_warning_bean.dart';
 import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_route.dart';
 import 'package:today/ui/weather/home/weather_info_mvp.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart' as date;
+import 'package:today/utils/jump_route_utils.dart';
 
 ///页面UI
 class WeatherInfoWidget extends StatefulWidget {
@@ -189,28 +191,48 @@ class _WeatherNowWidget extends StatelessWidget {
         elevation: 5.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         color: Colors.blueAccent,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            //上面显示城市名称信息
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsetsDirectional.all(20.0),
-                child: Text(
-                  _cityDBBean.name + " · " + _cityDBBean.region,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //上面显示城市名称信息
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.all(20.0),
+                    child: Text(
+                      _cityDBBean.name + " · " + _cityDBBean.region,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
 
-            //中间显示当前的温度和体感温度
-            _weatherNowBean != null && _weatherNowBean!.now != null
-                ? _createWeatherWidget(_weatherNowBean!.now!)
-                : Container(),
+                //中间显示当前的温度和体感温度
+                _weatherNowBean != null && _weatherNowBean!.now != null
+                    ? _createWeatherWidget(_weatherNowBean!.now!)
+                    : Container(),
+              ],
+            ),
+            Positioned(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Icon(
+                    Icons.location_city,
+                    color: Colors.white,
+                    size: 25.0,
+                  ),
+                ),
+                onTap: () => JumpUtils.toNextRouteWithName(context, RouteNameConstant.WEATHER_CITY_MANAGE_ROUTE),
+              ),
+              right: 0,
+              top: 0,
+            ),
           ],
         ),
       );

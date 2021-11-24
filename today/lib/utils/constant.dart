@@ -2,26 +2,6 @@ import 'package:flutter/material.dart';
 
 /// 保存常量的类
 
-///路由页面名称常量
-class RouteNameConstant {
-  //首页
-  static const String HOME_ROUTE = "homeRoute";
-  //账单首页
-  static const String BILL_HOME_ROUTE = "billHomeRoute";
-  //添加账单计划页面
-  static const String BILL_ADD_PLAN_ROUTE = "billAddPlanRoute";
-  //添加账单页面
-  static const String BILL_ADD_ROUTE = "billAddRoute";
-  //账单类型列表页面
-  static const String BILL_TYPE_LIST_ROUTE = "billTypeListRoute";
-  //账单列表页面
-  static const String BILL_LIST_ROUTE = "billListRoute";
-
-  //天气首页
-  static const String WEATHER_HOME_ROUTE = "weatherHomeRoute";
-  //添加城市页面
-  static const String WEATHER_ADD_CITY_ROUTE = "weatherAddCityRoute";
-}
 
 ///颜色相关常量
 class ColorConstant {
@@ -166,7 +146,7 @@ class DBConstant {
 
 
   ///保存用户选择的城市信息的数据表,获取天气信息的时候需要保存用户选择的城市信息
-  static const String TABLE_WEATHER_CITY = "WeatherCityTable";
+  static const String TABLE_NAME_WEATHER_CITY = "WeatherCityTable";
   static const String TABLE_WEATHER_CITY_ID = "id";
   static const String TABLE_WEATHER_CITY_HF_ID = "hfId";//保存请求到的和风天气API中的id信息，后面通过这个id去请求天气信息
   static const String TABLE_WEATHER_CITY_ADDRESS = "address";//保存具体的地址信息，中国-陕西省-西安市-长安区
@@ -175,7 +155,7 @@ class DBConstant {
 
   ///创建天气城市表
   static const String CREATE_TABLE_WEATHER_CITY = """
-    CREATE TABLE IF NOT EXISTS $TABLE_WEATHER_CITY(
+    CREATE TABLE IF NOT EXISTS $TABLE_NAME_WEATHER_CITY(
       $TABLE_WEATHER_CITY_ID INTEGER PRIMARY KEY,
       $TABLE_WEATHER_CITY_HF_ID TEXT NOT NULL,
       $TABLE_WEATHER_CITY_NAME TEXT NOT NULL,

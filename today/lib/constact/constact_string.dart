@@ -141,4 +141,9 @@ class StringConstant {
 
   //城市数量超过5个的错误提示
   static const String WEATHER_CITY_MORE_THAN_MAX = "当前最多支持添加5个城市";
+
+  //城市管理
+  static const String WEATHER_CITY_MANAGE = "城市管理";
+  static const String WEATHER_CITY_DELETE = "删除";
+  static const String DELETE_CITY_ERROR = "删除城市失败，请稍后重试";
 }

@@ -1,5 +1,4 @@
 import 'package:today/bean/weather/weather_city_bean.dart';
-import 'package:today/utils/log_utils.dart';
 
 ///天气相关的事件
 final WeatherCityEvent weatherCityEvent = WeatherCityEvent();
@@ -8,6 +7,9 @@ typedef void WeatherCityAdded(WeatherCityBean bean);
 
 //某一个城市被重复添加到数据库
 typedef void WeatherCityRepeatAdded(WeatherCityBean bean);
+
+//某一个城市被从数据库中删除
+typedef void WeatherCityRemoved(String hfId);
 
 class WeatherCityEvent {
   static WeatherCityEvent _instance = WeatherCityEvent._internal();
@@ -22,6 +24,8 @@ class WeatherCityEvent {
   final List<WeatherCityAdded> _cityAddList = [];
   //保存城市重复添加事件的map
   final List<WeatherCityRepeatAdded> _cityRepeatAddList = [];
+  //保存城市被删除的事件
+  final List<WeatherCityRemoved> _cityRemovedEventList = [];
 
   //将【添加城市】事件添加到事件列表中
   void addCityAddedEvent(WeatherCityAdded event) {
@@ -70,4 +74,27 @@ class WeatherCityEvent {
     }
   }
 
+
+    //将【删除城市】事件添加到事件列表中
+  void addCityRemovedEvent(WeatherCityRemoved event) {
+    if (!_cityRemovedEventList.contains(event)) {
+      _cityRemovedEventList.add(event);
+    }
+  }
+
+  //移除【重复添加城市】事件
+  void removeCityRemovedEvent(WeatherCityRemoved event) {
+    if(_cityRemovedEventList.contains(event)){
+      _cityRemovedEventList.remove(event);
+    }
+  }
+
+  //通知【重复添加城市】事件
+  void notifyCityRemovedEvent(String hfid){
+    if(_cityRemovedEventList.isNotEmpty){
+      for(WeatherCityRemoved event in _cityRemovedEventList){
+        event(hfid);
+      }
+    }
+  }
 }

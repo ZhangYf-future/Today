@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
+import 'package:today/constact/constant_route.dart';
 import 'package:today/event/event_weather.dart';
 import 'package:today/ui/weather/home/weather_home_mvp.dart';
 import 'package:today/ui/weather/home/weather_info_widget.dart';
@@ -39,6 +40,18 @@ class WeatherHomeState extends BaseState<WeatherHomeRoute> {
       Logs.ez("城市被添加");
       _pageList.add(WeatherCityDBBean.fromOther(bean));
       updatePage();
+    });
+
+    weatherCityEvent.addCityRemovedEvent((hfId) {
+      Logs.ez("城市被删除");
+      //从城市列表中删除当前城市
+      for(WeatherCityDBBean bean in this._pageList){
+        if(bean.hfId == hfId){
+          this._pageList.remove(bean);
+          this.updatePage();
+          break;
+        }
+      }
     });
   }
 

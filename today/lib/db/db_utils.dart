@@ -48,6 +48,9 @@ class DBUtils {
     _createBillPlanTable(database);
     _createBillTypeTable(database);
     _createBillTable(database);
+    //注意本来这里是需要添加这行代码的，但是由于之前的错误操作，导致weight字段已经被添加到创建表的时候，所以这里如果代码不回滚的话就无需再添加这行代码了
+    //_updateDB2(database);
+    _updateDB4(database);
   }
 
   //更新数据库
@@ -57,7 +60,8 @@ class DBUtils {
       switch (i) {
         case DBConstant.DB_FIRST_VERSION:
           //当前处于第一个版本,
-          _updateDB2(database);
+          //注意本来这里是需要添加这行代码的，但是由于之前的错误操作，导致weight字段已经被添加到创建表的时候，所以这里如果代码不回滚的话就无需再添加这行代码了
+          //_updateDB2(database);
           break;
         case DBConstant.DB_THREE_VERSION:
           //当前处于第三个版本，需要创建天气城市表
@@ -233,7 +237,7 @@ class DBUtils {
 
   ///向天气城市表中添加一条数据
   Future<int> insertWeatherCity(Map<String, dynamic> map) async {
-    return await database.insert(DBConstant.TABLE_WEATHER_CITY, map);
+    return await database.insert(DBConstant.TABLE_NAME_WEATHER_CITY, map);
   }
 
   //根据和风天气id从数据库中查询是否已经存在当前数据
@@ -241,13 +245,20 @@ class DBUtils {
     //查询条件
     var whereArgs = <String>[];
     whereArgs.add(hfId);
-    return await database.query(DBConstant.TABLE_WEATHER_CITY,
+    return await database.query(DBConstant.TABLE_NAME_WEATHER_CITY,
         where: "${DBConstant.TABLE_WEATHER_CITY_HF_ID} = ?",
         whereArgs: whereArgs);
   }
 
   //从数据库中查询出全部的城市信息
-  Future<List<Map<String,dynamic>>> queryAllWeatherCityList() async{
-    return await database.query(DBConstant.TABLE_WEATHER_CITY);
+  Future<List<Map<String, dynamic>>> queryAllWeatherCityList() async {
+    return await database.query(DBConstant.TABLE_NAME_WEATHER_CITY);
+  }
+
+  //根据id删除数据库中的一条数据
+  Future<int> deleteWeatherCityWithId(int id) async {
+    return database.delete(DBConstant.TABLE_NAME_WEATHER_CITY,
+        where: "${DBConstant.TABLE_WEATHER_CITY_ID} = ? ",
+        whereArgs: [id.toString()]);
   }
 }

@@ -10,8 +10,11 @@ import 'package:today/ui/bill/type/type_list_route.dart';
 import 'package:today/ui/home/home_route.dart';
 import 'package:today/ui/splash_route.dart';
 import 'package:today/ui/weather/city_add/city_add_route.dart';
+import 'package:today/ui/weather/city_manage/city_manage_route.dart';
 import 'package:today/ui/weather/home/weather_home_route.dart';
 import 'package:today/utils/constant.dart';
+
+import 'constact/constant_route.dart';
 
 void main() {
   //配置网络信息
@@ -54,6 +57,8 @@ class MyApp extends StatelessWidget {
         RouteNameConstant.WEATHER_HOME_ROUTE: (context) => WeatherHomeRoute(),
         //添加城市页面
         RouteNameConstant.WEATHER_ADD_CITY_ROUTE: (context) => CityAddWidget(),
+        //城市管理页面
+        RouteNameConstant.WEATHER_CITY_MANAGE_ROUTE: (context) => CityManageRoute(),
       },
       //启动页为闪屏页
       home: SplashRoute(),
