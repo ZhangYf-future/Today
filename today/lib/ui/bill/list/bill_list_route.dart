@@ -22,16 +22,16 @@ class BillListRouteWidget extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Icon(
-                Icons.filter_alt,
-                size: 26.0,
-              ),
-            ),
-          ),
+          // GestureDetector(
+          //   behavior: HitTestBehavior.opaque,
+          //   child: Padding(
+          //     padding: EdgeInsets.all(10.0),
+          //     child: Icon(
+          //       Icons.filter_alt,
+          //       size: 26.0,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       body: _ContentWidget(),

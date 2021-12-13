@@ -193,6 +193,7 @@ class _WeatherNowWidget extends StatelessWidget {
         color: Colors.blueAccent,
         child: Stack(
           children: [
+            //天气信息部分
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -217,6 +218,8 @@ class _WeatherNowWidget extends StatelessWidget {
                     : Container(),
               ],
             ),
+            
+            //右边显示城市图标按钮
             Positioned(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -232,6 +235,22 @@ class _WeatherNowWidget extends StatelessWidget {
               ),
               right: 0,
               top: 0,
+            ),
+
+            //左边显示返回键
+            Positioned(child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              child: Padding(padding: EdgeInsets.all(15.0),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 25.0,
+                ),
+              ),
+              onTap: () => Navigator.pop(context),
+            ),
+              top: 0,
+              left: 0,
             ),
           ],
         ),

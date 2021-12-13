@@ -17,16 +17,24 @@ class CityAddWidget extends StatefulWidget {
 }
 
 class CityAddState extends BaseState<CityAddWidget> {
-  //城市输入框的controller
-  final TextEditingController _inputCityController = TextEditingController();
-  //请求到的城市信息
-  WeatherCityListBean? _weatherCityList;
-  //presenter
-  CityAddPresenter? _presenter;
-
   //创建presenter
   CityAddState() {
     _presenter = CityAddPresenter(this);
+  }
+
+  //城市输入框的controller
+  final TextEditingController _inputCityController = TextEditingController();
+
+  //presenter
+  CityAddPresenter? _presenter;
+
+  //请求到的城市信息
+  WeatherCityListBean? _weatherCityList;
+
+  @override
+  void dispose() {
+    super.dispose();
+    Logs.ez("退出添加城市页面");
   }
 
   //城市信息请求成功后的回调
@@ -52,7 +60,7 @@ class CityAddState extends BaseState<CityAddWidget> {
           children: [
             //输入要添加的城市的数据框
             Container(
-              constraints: BoxConstraints.expand(height: 45.0),
+              constraints: BoxConstraints.expand(height: 40.0),
               alignment: Alignment.center,
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
@@ -60,50 +68,56 @@ class CityAddState extends BaseState<CityAddWidget> {
                 color: Colors.white,
               ),
               margin: EdgeInsets.only(left: 5.0, right: 5.0),
-              child: Stack(
-                alignment: Alignment.centerRight,
-                fit: StackFit.expand,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  //输入框
-                  TextField(
-                    controller: _inputCityController,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 14.0),
-                    decoration: InputDecoration(
-                        filled: true,
-                        hintText: StringConstant.INPUT_SEARCH_CITY_NAME,
-                        contentPadding: EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 0, bottom: 0),
-                        border: InputBorder.none,
-                        isCollapsed: false),
-                    showCursor: true,
-                    textInputAction: TextInputAction.search,
-                    onSubmitted: (input) => _presenter!.queryCityList(input),
+                  //返回键
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      constraints: BoxConstraints.expand(width: 40.0),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.black54,
+                        size: 20,
+                      ),
+                    ),
+                    onTap: () => Navigator.pop(context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    //文本输入框
+                    child: TextField(
+                      controller: _inputCityController,
+                      maxLines: 1,
+                      style: TextStyle(fontSize: 14.0),
+                      decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          isDense: true,
+                          filled: true,
+                          hintText: StringConstant.INPUT_SEARCH_CITY_NAME,
+                          contentPadding:
+                              EdgeInsets.only(right: 10.0),
+                          border: InputBorder.none,
+                          isCollapsed: false),
+                      showCursor: true,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (input) => _presenter!.queryCityList(input),
+                    ),
                   ),
 
-                  //清除输入内容的按钮
-                  Positioned(
-                    right: 10,
-                    child: GestureDetector(
-                      child: Container(
-                        //constraints: BoxConstraints.expand(width: 30, height: 30),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey,
-                        ),
-                        child: Icon(
-                          Icons.clear,
-                          color: Colors.white,
-                          size: 17,
-                        ),
-                      ),
-                      onTap: () {
-                        //清空输入框中的数据
-                        _inputCityController.text = "";
-                        _weatherCityList = null;
-                        _presenter!.clearOldName();
-                        updatePage();
-                      },
+                  Container(
+                    constraints: BoxConstraints.expand(width: 1.0),
+                    color: Colors.black45,
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                  ),
+
+                  //搜索按钮
+                  Container(
+                    child: MaterialButton(
+                      onPressed: () =>
+                          _presenter!.queryCityList(_inputCityController.text),
+                      child: Text("搜索"),
                     ),
                   ),
                 ],
@@ -142,19 +156,13 @@ class CityAddState extends BaseState<CityAddWidget> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    Logs.ez("退出添加城市页面");
-  }
 }
 
 ///城市信息widget
 class _CityWidget extends StatelessWidget {
-  final WeatherCityBean _cityBean;
-
   _CityWidget(this._cityBean);
+
+  final WeatherCityBean _cityBean;
 
   @override
   Widget build(BuildContext context) {
