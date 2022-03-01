@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
@@ -75,18 +74,19 @@ class HomeBlockWeatherWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         //右上角显示位置信息
-        (_weatherBean != null && _weatherBean!.location != null)
-            ? Padding(
-                padding: EdgeInsets.only(top: 10.0, right: 10.0),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    _weatherBean!.location!.district ?? "",
-                    style: TextStyle(color: Colors.redAccent),
-                  ),
-                ),
-              )
-            : Container(),
+        // (_weatherBean != null && _weatherBean!.location != null)
+        //     ? Padding(
+        //         padding: EdgeInsets.only(top: 10.0, right: 10.0),
+        //         child: Align(
+        //           alignment: Alignment.centerRight,
+        //           child: Text(
+        //             _weatherBean!.location!.district ?? "",
+        //             style: TextStyle(color: Colors.redAccent),
+        //           ),
+        //         ),
+        //       )
+        //     :
+        Container(),
 
         Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),

@@ -1,17 +1,15 @@
-import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
+import 'package:today/constact/constact_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/net/http_weather_helper.dart';
 import 'package:today/ui/home/home_route.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/constact/constact_string.dart' as cs;
-import 'package:today/utils/location_utils.dart';
-import 'package:today/utils/log_utils.dart';
-import 'package:today/utils/permission_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //presenter
 class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
@@ -26,35 +24,42 @@ class HomeRoutePresenter extends BasePresenter<HomeRouteModel, HomeState> {
     list.add(Permission.location);
     list.add(Permission.storage);
 
-    if (!await PermissionUtils.checkHavePermissions(list)) {
-      //没有权限，请求这两个权限
-      if (!await PermissionUtils.requestPermissions(list)) {
-        //没有请求到权限，直接返回空值
-        return;
-      }
-    }
-    //有权限，获取当前的位置信息
-    final locationUtils = BDLocationUtils();
-    Logs.ez("location utils is:${locationUtils.runtimeType}");
-    locationUtils.getLocation((event) async {
-      if (event != null && !event.containsKey("errorCode")) {
-        Logs.ez("定位成功");
-        //结束定位
-        locationUtils.stopLocation();
-        //转换位置信息
-        BaiduLocation location = BaiduLocation.fromMap(event);
-        final weather = await this
-            .model
-            .getNowWeather("${location.longitude},${location.latitude}");
-        //将位置信息设置进去
-        weather.location = location;
-        this.view.loadNowWeatherSuccess(weather);
-      }
-    });
+    // if (!await PermissionUtils.checkHavePermissions(list)) {
+    //   //没有权限，请求这两个权限
+    //   if (!await PermissionUtils.requestPermissions(list)) {
+    //     //没有请求到权限，直接返回空值
+    //     return;
+    //   }
+    // }
+    // //有权限，获取当前的位置信息
+    // final locationUtils = BDLocationUtils();
+    // Logs.ez("location utils is:${locationUtils.runtimeType}");
+    // locationUtils.getLocation((event) async {
+    //   if (event != null && !event.containsKey("errorCode")) {
+    //     Logs.ez("定位成功");
+    //     //结束定位
+    //     locationUtils.stopLocation();
+    //     //转换位置信息
+    //     BaiduLocation location = BaiduLocation.fromMap(event);
+    //     final weather = await this
+    //         .model
+    //         .getNowWeather("${location.longitude},${location.latitude}");
+    //     //将位置信息设置进去
+    //     weather.location = location;
+    //     this.view.loadNowWeatherSuccess(weather);
+    //   }
+    // });
   }
 
   //获取今天已经消费的数量
   Future<double> getBillCountToday() => this.model.getBillCountToday();
+
+  //判断是否显示过隐私协议的弹框
+  Future<bool> checkShowedPravicyDialog() =>
+      this.model.checkShowedPrivacyDialog();
+
+  //设置已经显示过隐私协议了
+  void setShowedPrivacyAgreement() => this.model.setShowedPrivacyAgreement();
 }
 
 //Model
@@ -93,5 +98,19 @@ class HomeRouteModel extends BaseModel<HomeRoutePresenter> {
   //获取今天已经消费的金额
   Future<double> getBillCountToday() async {
     return await DBHelper().getTodayBillCount();
+  }
+
+  //判断是否显示过隐私协议的弹框
+  Future<bool> checkShowedPrivacyDialog() async {
+    final SharedPreferences pre = await SharedPreferences.getInstance();
+    final bool? result =
+        pre.getBool(StringConstant.KEY_SHOWED_PRIVACY_AGREEMENT);
+    return Future.value(result ?? false);
+  }
+
+  //设置已经显示过隐私协议了
+  void setShowedPrivacyAgreement() async {
+    final SharedPreferences pre = await SharedPreferences.getInstance();
+    pre.setBool(StringConstant.KEY_SHOWED_PRIVACY_AGREEMENT, true);
   }
 }

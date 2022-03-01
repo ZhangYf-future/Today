@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
@@ -44,10 +44,8 @@ class HomeState extends BaseState<HomeRoute> {
     _subscribeBillChange();
     //加载页面中应该显示的block
     _loadBlocks();
-    //加载实时天气信息
-    _loadNowWeather();
-    //加载进入消费金额信息
-    _loadTodayBillCount();
+    //显示隐私协议的dialog
+    _showPrivacyDialog(context);
   }
 
   //监听账单数据的变化
@@ -86,6 +84,46 @@ class HomeState extends BaseState<HomeRoute> {
     updatePage();
   }
 
+  //显示隐私提示的弹框
+  void _showPrivacyDialog(BuildContext context) async {
+    final showed = await this._presenter!.checkShowedPravicyDialog();
+    if (!showed) {
+      //没有显示过，首先显示dialog
+      await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (ctx) => WillPopScope(
+          child: SimpleDialog(
+            title: Align(
+              child: Text(StringConstant.PRIVACY_AGREEMENT),
+              alignment: Alignment.topCenter,
+            ),
+            children: [
+              Container(
+                child: Text(
+                  StringConstant.PRIVACY_AGREEMENT_CONTENT,
+                  style: TextStyle(color: Colors.black, fontSize: 14.0),
+                ),
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              ),
+              TextButton(
+                  onPressed: () {
+                    this._presenter!.setShowedPrivacyAgreement();
+                    Navigator.pop(context);
+                  },
+                  child: Text(StringConstant.I_KNOW)),
+            ],
+          ),
+          onWillPop: () => exit(0),
+        ),
+      );
+    }
+    //加载实时天气信息
+    _loadNowWeather();
+    //加载今日消费金额信息
+    _loadTodayBillCount();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -98,7 +136,7 @@ class HomeState extends BaseState<HomeRoute> {
         top: false,
         maintainBottomViewPadding: true,
         child: Scaffold(
-          backgroundColor: ColorConstant.COLOR_THEME_BACKGROUND,
+          backgroundColor: Colors.white,
           endDrawerEnableOpenDragGesture: true,
           drawerEdgeDragWidth: 50.0,
           //标题栏
@@ -106,19 +144,19 @@ class HomeState extends BaseState<HomeRoute> {
             title: Text(
               StringConstant.MY_DAY,
               style: TextStyle(
-                color: ColorConstant.COLOR_DEFAULT_TEXT_COLOR,
+                color: Colors.black,
                 fontSize: 20.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
             centerTitle: true,
+            backgroundColor: Colors.white,
           ),
 
           //内容区
           body: Container(
             constraints: BoxConstraints.expand(),
-            child: GridView.builder(
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            child: ListView.builder(
               itemBuilder: (context, position) {
                 switch (this._homeBlockList[position].type) {
                   //账单
@@ -138,20 +176,5 @@ class HomeState extends BaseState<HomeRoute> {
             ),
           ),
         ));
-  }
-}
-
-/// 不是第一个block块的Widget
-class _MyDayFunctionBlockWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      child: Container(
-        child: Center(
-          child: Text("function widget"),
-        ),
-      ),
-    );
   }
 }

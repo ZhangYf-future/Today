@@ -1,4 +1,3 @@
-import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:today/bean/comm/base_http_result_bean.dart';
 part 'weather_now_bean.g.dart';
@@ -16,8 +15,8 @@ class WeatherNowBean extends BaseHttpBean {
   WeatherNowRealBean? now;
 
   //当前的位置信息，可能为空
-  @JsonKey(ignore: true)
-  BaiduLocation? location;
+  // @JsonKey(ignore: true)
+  // BaiduLocation? location;
 
   //构造函数
   WeatherNowBean(this.updateTime, this.fxLink, this.now)

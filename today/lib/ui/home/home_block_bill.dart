@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/constact/constact_string.dart' as cs;
@@ -20,9 +19,9 @@ class HomeBillBlockWidget extends StatelessWidget {
     return GestureDetector(
       child: Card(
         elevation: 10,
-        color: ColorConstant.COLOR_RED,
+        color: Color.fromARGB(255, 64, 90, 100),
         child: Container(
-            child: _amount == null
+            child: (_amount == null || _amount! <= 0.0)
                 ? createNoAmountWidget()
                 : createAmountWidget()),
       ),
@@ -40,8 +39,9 @@ class HomeBillBlockWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          //显示我的账单标题
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: Text(
               this._homeBlockBean.name,
               textAlign: TextAlign.start,
@@ -50,13 +50,11 @@ class HomeBillBlockWidget extends StatelessWidget {
                   fontSize: 20.0),
             ),
           ),
+          //显示记录账单信息的文字
           Align(
-              alignment: Alignment.center,
+              alignment: Alignment.bottomRight,
               child: Padding(
-                padding: EdgeInsets.only(
-                  left: 50.0,
-                  right: 20.0,
-                ),
+                padding: EdgeInsets.only(left: 50.0, right: 20.0, bottom: 20.0),
                 child: Text(
                   this._homeBlockBean.title,
                   style: TextStyle(

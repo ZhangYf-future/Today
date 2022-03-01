@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.7+8
+version: 1.0.8+9
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -33,14 +33,17 @@ dependencies:
   permission_handler: ^8.2.2
   #网络请求的插件
   dio: ^4.0.0
-  #高德地图定位插件
-  amap_flutter_location: ^2.0.0
+  #百度地图定位插件(暂时去除，对包体积影响很大)
+  #amap_flutter_location: ^2.0.0
   #json转model需要的插件
   json_annotation: ^4.3.0
   json_serializable: ^6.0.1
   #百度地图定位所需的插件
-  flutter_bmflocation: ^2.0.0-nullsafety.1
+  #flutter_bmflocation: ^2.0.0-nullsafety.1
+  #svg图片显示
   flutter_svg: ^0.23.0+1
+  #保存配置信息
+  shared_preferences: ^2.0.11
   
 dev_dependencies:
   flutter_test:

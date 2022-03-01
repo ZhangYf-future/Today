@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/weather/weather_city_bean.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
-import 'package:today/bean/weather/weather_now_bean.dart';
+
 import 'package:today/db/db_helper.dart';
-import 'package:today/net/http_weather_helper.dart';
+
 import 'package:today/ui/weather/home/weather_home_route.dart';
-import 'package:today/utils/location_utils.dart';
+
 import 'package:today/utils/log_utils.dart';
 import 'package:today/utils/permission_utils.dart';
 
@@ -44,19 +42,19 @@ class WeatherHomePresenter
 
   //请求城市信息
   void _getLocation() {
-    BDLocationUtils utils = BDLocationUtils();
-    utils.getLocation((data) {
-      utils.stopLocation();
-      if (data != null && !data.containsKey("errorCode")) {
-        //定位成功
-        var location = BaiduLocation.fromMap(data);
-        var bean = WeatherCityDBBean.fromBDLocation(location);
-        this.view.getLocationSuccess(bean);
-      } else {
-        //定位失败
-        this.view.getLocationFailed();
-      }
-    });
+    // BDLocationUtils utils = BDLocationUtils();
+    // utils.getLocation((data) {
+    //   utils.stopLocation();
+    //   if (data != null && !data.containsKey("errorCode")) {
+    //     //定位成功
+    //     var location = BaiduLocation.fromMap(data);
+    //     var bean = WeatherCityDBBean.fromBDLocation(location);
+    //     this.view.getLocationSuccess(bean);
+    //   } else {
+    //     //定位失败
+    //     this.view.getLocationFailed();
+    //   }
+    // });
   }
 
   //请求全部的城市信息
@@ -64,12 +62,13 @@ class WeatherHomePresenter
       DBHelper().getAllWeatherCityList();
 
   //判断当前被重复添加的城市在整个页面的第几个位置
-  int checkRepeatCityPosition(List<WeatherCityDBBean>? sourceList, WeatherCityBean cityBean){
-    if(sourceList == null || sourceList.isEmpty){
+  int checkRepeatCityPosition(
+      List<WeatherCityDBBean>? sourceList, WeatherCityBean cityBean) {
+    if (sourceList == null || sourceList.isEmpty) {
       return -1;
     }
-    for(int i = 0; i < sourceList.length;i++){
-      if(sourceList[i].hfId == cityBean.id){
+    for (int i = 0; i < sourceList.length; i++) {
+      if (sourceList[i].hfId == cityBean.id) {
         return i;
       }
     }

@@ -13,7 +13,7 @@ class SplashRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _ContentWidget(),
-      backgroundColor: ColorConstant.COLOR_THEME_BACKGROUND,
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -51,18 +51,19 @@ class _ContentState extends State<_ContentWidget> {
             alignment: Alignment.center,
             child: Text(
               _splashText,
-              style: TextStyle(fontSize: 24.0, color: Colors.white),
+              style: TextStyle(
+                fontSize: 24.0,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-
-        Padding(padding: EdgeInsets.symmetric(vertical: 15.0),
-        
-          child: Text(StringConstant.WEATHER_DATA_FROM,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 13.0
-            ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0),
+          child: Text(
+            StringConstant.WEATHER_DATA_FROM,
+            style: TextStyle(color: Colors.white, fontSize: 13.0),
           ),
         )
       ],
@@ -72,7 +73,7 @@ class _ContentState extends State<_ContentWidget> {
   //经过1秒之后跳转到首页
   void _toHome() {
     Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
         () => JumpUtils.toNextRouteWithNameAndFinish(
             context, RouteNameConstant.HOME_ROUTE));
   }
