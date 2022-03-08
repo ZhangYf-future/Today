@@ -3,7 +3,7 @@ import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/db/db_utils.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart';
@@ -257,12 +257,13 @@ class DBHelper {
   }
 
   ///向天气城市数据表中加入一条数据
-  Future<DBResultEntity> insertWeatherCity(WeatherCityDBBean bean) async{
+  Future<DBResultEntity> insertWeatherCity(WeatherCityDBBean bean) async {
     final result = DBResultEntity();
-    try{
+    try {
       //查询城市的总数
-      final List<Map<String,dynamic>> list = await _dbUtils.queryAllWeatherCityList();
-      if(list.isNotEmpty && list.length >= 5){
+      final List<Map<String, dynamic>> list =
+          await _dbUtils.queryAllWeatherCityList();
+      if (list.isNotEmpty && list.length >= 5) {
         //城市数量超过5个,不能继续添加
         result.code = DBConstant.DB_RESULT_FAILED;
         result.msg = StringConstant.WEATHER_CITY_MORE_THAN_MAX;
@@ -271,7 +272,7 @@ class DBHelper {
 
       //查询是否已经有同样的数据了
       var checkRepeatData = await _dbUtils.queryWeatherCityExists(bean.hfId);
-      if(checkRepeatData.isNotEmpty){
+      if (checkRepeatData.isNotEmpty) {
         //数据重复，不需要插入数据
         result.code = DBConstant.DB_RESULT_FAILED;
         result.result = bean;
@@ -280,25 +281,24 @@ class DBHelper {
 
       int id = await _dbUtils.insertWeatherCity(bean.toMap());
       Logs.ez("insertWeatherCity: success:$id");
-      if(id == -1){
+      if (id == -1) {
         result.code = DBConstant.DB_RESULT_FAILED;
       }
       result.result = id;
-    }catch(e){
+    } catch (e) {
       Logs.ez("insertWeatherCity:$e");
-        result.code = DBConstant.DB_RESULT_FAILED;
+      result.code = DBConstant.DB_RESULT_FAILED;
     }
     return result;
   }
 
   //请求全部城市信息列表
-  Future<List<WeatherCityDBBean>> getAllWeatherCityList() async{
-
+  Future<List<WeatherCityDBBean>> getAllWeatherCityList() async {
     final mapList = await _dbUtils.queryAllWeatherCityList();
 
     final cityList = <WeatherCityDBBean>[];
 
-    mapList.forEach((element) { 
+    mapList.forEach((element) {
       cityList.add(WeatherCityDBBean.fromMap(element));
     });
 
@@ -306,12 +306,12 @@ class DBHelper {
   }
 
   //根据id删除一个城市信息
-  Future<DBResultEntity> deleteWeatherCityWithId(int id) async{
+  Future<DBResultEntity> deleteWeatherCityWithId(int id) async {
     final result = DBResultEntity();
     final deleteResult = await _dbUtils.deleteWeatherCityWithId(id);
-    if(deleteResult != -1){
+    if (deleteResult != -1) {
       result.code = DBConstant.DB_RESULT_SUCCESS;
-    }else{
+    } else {
       result.code = DBConstant.DB_RESULT_FAILED;
       result.msg = StringConstant.DELETE_CITY_ERROR;
     }

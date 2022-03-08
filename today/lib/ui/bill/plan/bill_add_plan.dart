@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/constact/constant_event.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/event/event_bill.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/date_utils.dart' as date_utils;
+
 ///添加账单计划的页面
 
 class AddBillPlanRoute extends StatelessWidget {
@@ -171,17 +172,16 @@ class _ContentState extends State<_ContentWidget> {
 
   //获取当前月份和年份
   void _getYearMonth() {
-
     _year = date_utils.DateUtils.getCurrentYear();
     _month = date_utils.DateUtils.getCurrentMonth();
-        _updatePage();
+    _updatePage();
   }
 
   //将用户输入的信息添加到数据表中
   void _insertPlanData() async {
     var bean = BillPlanBean();
     bean.planAmount = double.parse(_amountController.text);
-    if(bean.planAmount <= 0){
+    if (bean.planAmount <= 0) {
       showInfo(StringConstant.ERROR_BILL_PLAN_AMOUNT);
     }
     bean.planYear = _year;
@@ -189,7 +189,8 @@ class _ContentState extends State<_ContentWidget> {
     var result = await _dbHelper.insertBillPlan(bean);
     if (result == StringConstant.INSERT_DATA_SUCCESS) {
       //通知外部更新月度计划信息
-      billEvent.subscribe(EventConstant.EVENT_BILL_CHANGED, BillEvent.BILL_MONTH_PLAN_ADD);
+      billEvent.subscribe(
+          EventConstant.EVENT_BILL_CHANGED, BillEvent.BILL_MONTH_PLAN_ADD);
       //退出当前页面并返回1表示成功
       Navigator.pop(context, 1);
     }

@@ -1,4 +1,4 @@
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/utils/date_utils.dart';
 
 class Logs {

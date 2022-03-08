@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/constact/constant_event.dart';
 import 'package:today/event/event_bill.dart';
 import 'package:today/ui/home/home_block_bill.dart';

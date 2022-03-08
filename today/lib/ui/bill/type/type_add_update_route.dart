@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/main.dart';
 import 'package:today/utils/constant.dart';

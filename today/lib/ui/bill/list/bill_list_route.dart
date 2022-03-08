@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/string_utils.dart';

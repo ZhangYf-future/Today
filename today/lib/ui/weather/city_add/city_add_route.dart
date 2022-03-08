@@ -1,14 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/weather/weather_city_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/ui/weather/city_add/city_add_mvp.dart';
-import 'package:today/utils/constant.dart';
 import 'package:today/utils/log_utils.dart';
-import 'package:today/utils/string_utils.dart';
 
 ///添加城市页面
 class CityAddWidget extends StatefulWidget {
@@ -24,12 +19,20 @@ class CityAddState extends BaseState<CityAddWidget> {
 
   //城市输入框的controller
   final TextEditingController _inputCityController = TextEditingController();
+  //城市输入框的FocusNode
+  final FocusNode _inputCityFocusNode = FocusNode();
 
   //presenter
   CityAddPresenter? _presenter;
 
   //请求到的城市信息
   WeatherCityListBean? _weatherCityList;
+
+  @override
+  void initState() {
+    super.initState();
+    _inputCityFocusNode.requestFocus();
+  }
 
   @override
   void dispose() {
@@ -96,13 +99,13 @@ class CityAddState extends BaseState<CityAddWidget> {
                           isDense: true,
                           filled: true,
                           hintText: StringConstant.INPUT_SEARCH_CITY_NAME,
-                          contentPadding:
-                              EdgeInsets.only(right: 10.0),
+                          contentPadding: EdgeInsets.only(right: 10.0),
                           border: InputBorder.none,
                           isCollapsed: false),
                       showCursor: true,
                       textInputAction: TextInputAction.search,
                       onSubmitted: (input) => _presenter!.queryCityList(input),
+                      focusNode: _inputCityFocusNode,
                     ),
                   ),
 

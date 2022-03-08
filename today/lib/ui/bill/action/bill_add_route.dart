@@ -5,7 +5,7 @@ import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
 import 'package:today/bean/bill/bill_type_bean.dart';
 import 'package:today/bean/comm/db_result_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/constact/constant_event.dart';
 import 'package:today/constact/constant_route.dart';
 import 'package:today/db/db_helper.dart';
@@ -306,7 +306,7 @@ class _ContentState extends State<_ContentWidget> {
     double? inputAmount = double.tryParse(_amountInputController.text);
     double amount = inputAmount == null ? 0 : inputAmount;
 
-    if(amount <= 0){
+    if (amount <= 0) {
       showInfo(StringConstant.ERROR_BILL_AMOUNT);
       return;
     }

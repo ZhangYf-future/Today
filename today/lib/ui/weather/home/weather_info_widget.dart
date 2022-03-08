@@ -9,7 +9,7 @@ import 'package:today/bean/weather/weather_life_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
 import 'package:today/bean/weather/weather_seven_day_bean.dart';
 import 'package:today/bean/weather/weather_warning_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/constact/constant_route.dart';
 import 'package:today/ui/weather/home/weather_info_mvp.dart';
 import 'package:today/utils/constant.dart';
@@ -218,7 +218,7 @@ class _WeatherNowWidget extends StatelessWidget {
                     : Container(),
               ],
             ),
-            
+
             //右边显示城市图标按钮
             Positioned(
               child: GestureDetector(
@@ -231,24 +231,27 @@ class _WeatherNowWidget extends StatelessWidget {
                     size: 25.0,
                   ),
                 ),
-                onTap: () => JumpUtils.toNextRouteWithName(context, RouteNameConstant.WEATHER_CITY_MANAGE_ROUTE),
+                onTap: () => JumpUtils.toNextRouteWithName(
+                    context, RouteNameConstant.WEATHER_CITY_MANAGE_ROUTE),
               ),
               right: 0,
               top: 0,
             ),
 
             //左边显示返回键
-            Positioned(child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              child: Padding(padding: EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 25.0,
+            Positioned(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 25.0,
+                  ),
                 ),
+                onTap: () => Navigator.pop(context),
               ),
-              onTap: () => Navigator.pop(context),
-            ),
               top: 0,
               left: 0,
             ),

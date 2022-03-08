@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/bean/bill/bill_bean.dart';
 import 'package:today/bean/bill/bill_plan_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/constact/constant_event.dart';
 import 'package:today/constact/constant_route.dart';
 import 'package:today/db/db_helper.dart';
@@ -78,7 +78,7 @@ class _ContentState extends State<_ContentWidget> {
     super.initState();
     //月度计划添加成功
     billEvent.addObserver(EventConstant.EVENT_BILL_CHANGED, (type) {
-      if(type == BillEvent.BILL_MONTH_PLAN_ADD){
+      if (type == BillEvent.BILL_MONTH_PLAN_ADD) {
         //重新请求当前月度计划信息
         _getMonthPlanInfo();
       }
@@ -200,7 +200,8 @@ class _ContentState extends State<_ContentWidget> {
     _monthPlanBean = await _helper.getCurrentMonthPlan();
     if (_monthPlanBean != null) {
       //计划消费金额
-      this._consumePlan = double.parse(_monthPlanBean!.planAmount.toStringAsFixed(2));
+      this._consumePlan =
+          double.parse(_monthPlanBean!.planAmount.toStringAsFixed(2));
       //获取当前消费计划下的账单金额信息
       var amountList =
           await _helper.getAllBillAmountWithPlanId(_monthPlanBean!.id);

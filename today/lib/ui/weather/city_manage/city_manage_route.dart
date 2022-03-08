@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:today/base/base_view.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/ui/weather/city_manage/city_manage_mvp.dart';
 import 'package:today/utils/constant.dart';
 
@@ -96,9 +96,8 @@ class CityManageState extends BaseState<CityManageRoute> {
                         child: Text(StringConstant.WEATHER_CITY_DELETE),
                       ),
                       //点击删除城市信息
-                      onTap: () => this
-                          ._presenter!
-                          .deleteWeatherCity(this._list[index].id!,this._list[index].hfId),
+                      onTap: () => this._presenter!.deleteWeatherCity(
+                          this._list[index].id!, this._list[index].hfId),
                     ),
                   ],
                 ),

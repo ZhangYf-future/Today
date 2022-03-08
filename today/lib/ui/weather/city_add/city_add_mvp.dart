@@ -4,7 +4,7 @@ import 'package:today/bean/comm/db_result_bean.dart';
 import 'package:today/bean/weather/weather_city_bean.dart';
 import 'package:today/bean/weather/weather_city_db_bean.dart';
 import 'package:today/constact/constact_dio.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/event/event_weather.dart';
 import 'package:today/net/http_weather_helper.dart';
@@ -63,7 +63,7 @@ class CityAddPresenter extends BasePresenter<CityAddModel, CityAddState> {
         this.view.exit();
         return;
       }
-      if(StringUtils.isNotEmpty(result.msg)){
+      if (StringUtils.isNotEmpty(result.msg)) {
         this.view.showMessage(result.msg);
         return;
       }

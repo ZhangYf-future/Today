@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// 保存常量的类
 
-
 ///颜色相关常量
 class ColorConstant {
   //主题背景颜色
@@ -40,7 +39,6 @@ class DBConstant {
   static const int DB_THREE_VERSION = 3;
   //数据库第四个版本，添加天气城市数据表,第三个版本的数据表有问题
   static const int DB_FOUR_VERSION = 4;
-
 
   //账单管理部分
   //账单表名称
@@ -92,7 +90,6 @@ class DBConstant {
   //创建时间
   static const String BILL_PLAN_CREATE_TIME = "createTime";
 
-
   //创建账单数据表
   static const String CREATE_BILL_TABLE = """
     CREATE TABLE IF NOT EXISTS $BILL_TABLE_NAME(
@@ -128,7 +125,6 @@ class DBConstant {
       );
     """;
 
-
   //获取账单表中的最后10条数据
   static const String GET_BILL_LAST_TEN_ROW = """
     SELECT * FROM $BILL_TABLE_NAME ORDER BY $BILL_TIME DESC LIMIT 10;
@@ -144,14 +140,15 @@ class DBConstant {
     ALTER TABLE $BILL_TYPE_TABLE_NAME ADD COLUMN $BILL_TYPE_WEIGHT INTEGER;
   """;
 
-
   ///保存用户选择的城市信息的数据表,获取天气信息的时候需要保存用户选择的城市信息
   static const String TABLE_NAME_WEATHER_CITY = "WeatherCityTable";
   static const String TABLE_WEATHER_CITY_ID = "id";
-  static const String TABLE_WEATHER_CITY_HF_ID = "hfId";//保存请求到的和风天气API中的id信息，后面通过这个id去请求天气信息
-  static const String TABLE_WEATHER_CITY_ADDRESS = "address";//保存具体的地址信息，中国-陕西省-西安市-长安区
-  static const String TABLE_WEATHER_CITY_NAME = "city";//保存城市名，如西安市
-  static const String TABLE_WEATHER_CITY_REGION = "region";//保存区或者县的名称，如长安区
+  static const String TABLE_WEATHER_CITY_HF_ID =
+      "hfId"; //保存请求到的和风天气API中的id信息，后面通过这个id去请求天气信息
+  static const String TABLE_WEATHER_CITY_ADDRESS =
+      "address"; //保存具体的地址信息，中国-陕西省-西安市-长安区
+  static const String TABLE_WEATHER_CITY_NAME = "city"; //保存城市名，如西安市
+  static const String TABLE_WEATHER_CITY_REGION = "region"; //保存区或者县的名称，如长安区
 
   ///创建天气城市表
   static const String CREATE_TABLE_WEATHER_CITY = """
@@ -171,12 +168,10 @@ class HomeBlockConstant {
   //首页账单类型
   static const HOME_BLOCK_TYPE_BILL = "账单";
   static const HOME_BLOCK_NAME_BILL = "我的账单";
-  
 
   //首页天气类型
   static const HOME_BLOCK_TYPE_WEATHER = "天气";
   static const HOME_BLOCK_NAME_WEATHER = "今日天气";
-  static const HOME_BLOCK_TITLE_WEATHER = "查看详细天气 -->";
+  static const HOME_BLOCK_TITLE_WEATHER = "查看详细天气>";
+  static const HOME_BLOCK_TITLE_WEATHER_NO_ADDRESS = "添加城市以查看天气>";
 }
-
-

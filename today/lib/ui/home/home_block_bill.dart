@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
-import 'package:today/constact/constact_string.dart' as cs;
+import 'package:today/constact/constant_string.dart' as cs;
 import 'package:today/constact/constant_route.dart';
 import 'package:today/utils/constant.dart';
 import 'package:today/utils/jump_route_utils.dart';
@@ -18,7 +18,7 @@ class HomeBillBlockWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Card(
-        elevation: 10,
+        elevation: 3,
         color: Color.fromARGB(255, 64, 90, 100),
         child: Container(
             child: (_amount == null || _amount! <= 0.0)

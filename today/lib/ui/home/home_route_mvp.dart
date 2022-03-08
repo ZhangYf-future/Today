@@ -3,12 +3,12 @@ import 'package:today/base/base_model.dart';
 import 'package:today/base/base_presenter.dart';
 import 'package:today/bean/comm/home_block_bean.dart';
 import 'package:today/bean/weather/weather_now_bean.dart';
-import 'package:today/constact/constact_string.dart';
+import 'package:today/constact/constant_string.dart';
 import 'package:today/db/db_helper.dart';
 import 'package:today/net/http_weather_helper.dart';
 import 'package:today/ui/home/home_route.dart';
 import 'package:today/utils/constant.dart';
-import 'package:today/constact/constact_string.dart' as cs;
+import 'package:today/constact/constant_string.dart' as cs;
 import 'package:shared_preferences/shared_preferences.dart';
 
 //presenter
@@ -80,7 +80,7 @@ class HomeRouteModel extends BaseModel<HomeRoutePresenter> {
     final HomeBlockBean weatherBean = new HomeBlockBean(
         HomeBlockConstant.HOME_BLOCK_TYPE_WEATHER,
         HomeBlockConstant.HOME_BLOCK_NAME_WEATHER,
-        HomeBlockConstant.HOME_BLOCK_TITLE_WEATHER,
+        HomeBlockConstant.HOME_BLOCK_TITLE_WEATHER_NO_ADDRESS,
         null);
 
     homeBlockList.add(billBean);
